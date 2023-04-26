@@ -7,6 +7,7 @@ del ProductManager, sino voy a detallar algunas particularidades del CartManager
 */
 
 const fs = require('fs');
+const path = require("path");
 const ProductsManager = require('./productsManager');
 
 class CartManager {
@@ -15,7 +16,8 @@ class CartManager {
   productsManager = new ProductsManager();
 
   constructor() {
-    this.path = __dirname + '/data/carts.json';
+    this.path = path.join(__dirname, "./data/carts.json");
+
   }
 
   async getAllCarts() {

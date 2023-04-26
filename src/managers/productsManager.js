@@ -9,13 +9,14 @@ manejar información con texto plano
 
 */
 const fs = require('fs');
-
+// path es una herramienta que viene integrada con node sirve para declarar rutas relativas a la raíz del proyecto 
+const path = require("path");
 class ProductsManager {
   // En el constructor se coloca la información o datos o métodos que se quieren inicializar en cualquier instancia de clase
   constructor() {
     // Implementamos un path general para toda la clase, es de buenas prácticas realizarlo así, en caso de cambiar
     // la ruta se cambia directamente en todos los lugares que se instancia la clase
-    this.path = __dirname + '/data/products.json';
+    this.path = path.join(__dirname, "./data/products.json");
   }
 
   // Un método de una clase equivale a una función tradicional, solo que se puede ejecutar solo cuando se instancia la clase
