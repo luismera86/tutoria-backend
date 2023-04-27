@@ -84,11 +84,11 @@ class CartManager {
   async deleteCart(id) {
     const carts = await this.getAllCarts();
 
-    carts.filter((cart) => cart.id !== id);
+    const cartsFilters = carts.filter((cart) => cart.id !== id);
 
     await fs.promises.writeFile(this.path, JSON.stringify(carts));
 
-    return carts;
+    return cartsFilters;
   }
 }
 
