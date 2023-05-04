@@ -1,9 +1,11 @@
 
 // Importamos el Router de express para poder trabajar las peticiones get, post, put y delete
-const { Router } = require('express');
+
+import ProductsManager from'../managers/productsManager.js';
+import { Router } from 'express';
 
 // Importamos el ProductManager para utilizar los métodos necesarios en los endpoint 
-const ProductsManager = require('../managers/productsManager');
+
 
 // Hacemos una instancia del ProductManager para poder llamar a sus métodos
 const products = new ProductsManager();
@@ -129,4 +131,4 @@ router.delete(`/${path}/:id`, async (req, res) => {
 });
 
 // Exportamos el router para poder inicializar en el app.js
-module.exports = router;
+export default router;

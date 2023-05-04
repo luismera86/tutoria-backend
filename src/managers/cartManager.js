@@ -6,9 +6,10 @@ del ProductManager, sino voy a detallar algunas particularidades del CartManager
 
 */
 
-const fs = require('fs');
-const path = require("path");
-const ProductsManager = require('./productsManager');
+import ProductsManager from'./productsManager.js';
+import { __dirname } from '../utils.js';
+import fs from'fs';
+import path from"path";
 
 class CartManager {
 
@@ -16,7 +17,7 @@ class CartManager {
   productsManager = new ProductsManager();
 
   constructor() {
-    this.path = path.join(__dirname, "./data/carts.json");
+    this.path = __dirname + "/managers/data/carts.json";
 
   }
 
@@ -92,4 +93,4 @@ class CartManager {
   }
 }
 
-module.exports = CartManager;
+export default CartManager;

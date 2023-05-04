@@ -3,8 +3,8 @@
   salvo en el método de agregar un producto al carrito que tiene una particularidad
 */
 
-const { Router } = require('express');
-const CartManager = require('../managers/cartManager');
+import CartManager from '../managers/cartManager.js';
+import { Router } from 'express';
 
 const cartsManager = new CartManager();
 const path = 'carts';
@@ -82,4 +82,4 @@ router.get(`/${path}`, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
