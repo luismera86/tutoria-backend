@@ -6,7 +6,7 @@ const router = Router();
 router.get(`/`, async (req, res) => {
   try {
     
-    res.render("index", {})
+    res.render("chat")
   } catch (error) {
     console.log(error);
   }

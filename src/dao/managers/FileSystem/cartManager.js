@@ -7,9 +7,9 @@ del ProductManager, sino voy a detallar algunas particularidades del CartManager
 */
 
 import ProductsManager from'./productsManager.js';
-import { __dirname } from '../utils.js';
 import fs from'fs';
 import path from"path";
+import { __dirname } from '../../../utils.js';
 
 class CartManager {
 
@@ -17,7 +17,7 @@ class CartManager {
   productsManager = new ProductsManager();
 
   constructor() {
-    this.path = __dirname + "/managers/data/carts.json";
+    this.path = __dirname + "/dao/managers/FileSystem/data/carts.json";
 
   }
 

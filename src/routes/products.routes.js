@@ -1,7 +1,8 @@
 
 // Importamos el Router de express para poder trabajar las peticiones get, post, put y delete
 
-import ProductsManager from'../managers/productsManager.js';
+import ProductsManager from '../dao/managers/FileSystem/productsManager.js';
+import Product from '../dao/models/product.model.js';
 import { Router } from 'express';
 
 // Importamos el ProductManager para utilizar los métodos necesarios en los endpoint 
@@ -40,7 +41,7 @@ router.get(`/${path}`, async (req, res) => {
 
     // Lamamos los productos con el ProductManager
     const resProducts = await products.getAllProducts();
-
+    
     // El servidor responde un json con el listado de productos solicitados por el cliente
     res.status(200).json(resProducts);
   } catch (error) {

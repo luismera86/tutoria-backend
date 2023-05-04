@@ -3,8 +3,8 @@
   salvo en el método de agregar un producto al carrito que tiene una particularidad
 */
 
-import CartManager from '../managers/cartManager.js';
 import { Router } from 'express';
+import CartManager from '../dao/managers/FileSystem/cartManager.js';
 
 const cartsManager = new CartManager();
 const path = 'carts';
