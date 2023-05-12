@@ -1,15 +1,13 @@
-
 // Importamos el Router de express para poder trabajar las peticiones get, post, put y delete
 
-import ProductsManager from '../dao/managers/FileSystem/productsManager.js';
+import { ProductManagerDB } from '../dao/managers/DB/ProductManager.db.js';
 import Product from '../dao/models/product.model.js';
 import { Router } from 'express';
 
-// Importamos el ProductManager para utilizar los métodos necesarios en los endpoint 
-
+// Importamos el ProductManager para utilizar los métodos necesarios en los endpoint
 
 // Hacemos una instancia del ProductManager para poder llamar a sus métodos
-const products = new ProductsManager();
+const products = new ProductManagerDB();
 
 /* 
 Como buena práctica almacenos en una variable el nombre de la ruta path,
@@ -38,10 +36,9 @@ Creamos el primer endpoint get
 */
 router.get(`/${path}`, async (req, res) => {
   try {
-
     // Lamamos los productos con el ProductManager
     const resProducts = await products.getAllProducts();
-    
+
     // El servidor responde un json con el listado de productos solicitados por el cliente
     res.status(200).json(resProducts);
   } catch (error) {
@@ -58,15 +55,11 @@ router.get(`/${path}/:id`, async (req, res) => {
   // Desestructuramos de los req.params el alias enviado por el cliente
   const { id } = req.params;
   try {
-    /* 
-      Buscamos el producto con el id enviados por el cliente con el método del ProductManager
-      Es importante tener en cuneta que los params recibidos tienen el formato string
-      si ustedes tienen el id de tipo number antes de enviarlos deben transformarlo 
-      a tipo number con parseInt()
-    */
-    const resProduct = await products.getProductById(parseInt(id));
+    // Buscamos el producto con el id enviados por el cliente con el método del ProductManager
 
-    // El servidor envía la respuesta del método getProductById en un json 
+    const resProduct = await products.getProductById(id);
+
+    // El servidor envía la respuesta del método getProductById en un json
     res.status(200).json(resProduct);
   } catch (error) {
     // En caso de haber un error se atrapa en el catch y muestra el error por la consola
@@ -105,10 +98,9 @@ router.put(`/${path}/:id`, async (req, res) => {
   const { id } = req.params;
   const body = req.body;
   try {
-
     // Enviamos los datos al método updateProduct y almacenamos su respuesta en resProducts
-    const resProducts = await products.updateProduct(parseInt(id), body);
-    
+    const resProducts = await products.updateProduct(id, body);
+
     // El servidor envía la respuesta del método updateProducts
     res.status(200).json(resProducts);
   } catch (error) {
@@ -124,7 +116,7 @@ router.put(`/${path}/:id`, async (req, res) => {
 router.delete(`/${path}/:id`, async (req, res) => {
   const { id } = req.params;
   try {
-    const resProduct = await products.deleteProduct(parseInt(id));
+    const resProduct = await products.deleteProduct(id);
     res.status(200).json(resProduct);
   } catch (error) {
     console.log(error);

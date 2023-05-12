@@ -1,9 +1,8 @@
 // Importamos nuestros modelo de Cart para trabajar sobre el con los métodos de mongoose
-import Cart from "../../models/cart.model";
-import Product from "../../models/product.model";
+import Cart from '../../models/cart.model.js';
+import Product from '../../models/product.model.js';
 
-export class CartManager {
-
+export class CartManagerDB {
   // Llamamos todos los Carts
   async getAllCarts() {
     const carts = await Cart.find();
@@ -18,22 +17,19 @@ export class CartManager {
   }
 
   // Agregamos un Cart a nuestra base de datos
-  async addCart(Cart) {
-    const { title, price, description, thumbnail, status, stock, code, category } = Cart;
-
-    const checkCartInfo = Object.values(Cart).includes(undefined);
-
-    if (checkCartInfo) return 'Faltan propiedades al Cart';
-
-    const cart = await Cart.create(Cart);
+  async addCart() {
+    const newCart = {
+      products: [],
+    };
+    const cart = await Cart.create(newCart);
     return cart;
   }
 
   // Agregamos un product al array products de Cart
   async addProductToCart(idCart, idProduct) {
-    const product = await Product.findOne({ _id: idProduct })
-    if(!product) return `El producto con el id ${idProduct} no existe`
-    const cartUpdate = await Cart.updateOne({ _id: idCart }, {$push: {products: product}});
+    const product = await Product.findOne({ _id: idProduct });
+    if (!product) return `El producto con el id ${idProduct} no existe`;
+    const cartUpdate = await Cart.updateOne({ _id: idCart }, { $push: { products: product } });
     return cartUpdate;
   }
 

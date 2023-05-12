@@ -14,7 +14,7 @@ import mongoose from 'mongoose';
 import { MessageManager } from './dao/managers/DB/MessageManager.db.js';
 import cartsRouter from './routes/carts.routes.js';
 import productRouter from './routes/products.routes.js';
-import viewsRouters from "./routes/views.routes.js";
+import viewsRouters from './routes/views.routes.js';
 import { __dirname } from './utils.js';
 
 // Almacenamos el puerto en una constante
@@ -24,7 +24,7 @@ const PORT = 8080;
 const app = express();
 
 // conectamos mongoose con la base de datos local
-mongoose.connect('mongodb://127.0.0.1:27017/tutoria')
+mongoose.connect('mongodb://127.0.0.1:27017/tutoria');
 
 // Implementamos handlebars
 app.engine('handlebars', handlebars.engine());
@@ -43,7 +43,7 @@ app.use(express.urlencoded({ extended: true }));
 // Iniciamos las rutas importadas, las de products y carts para poder utilizar los endpoints
 app.use('/api', productRouter);
 app.use('/api', cartsRouter);
-app.use("/", viewsRouters)
+app.use('/', viewsRouters);
 
 // Iniciamos el servidor en el puerto asignado en la constante PORT
 
@@ -57,17 +57,21 @@ const socketServer = new Server(httpServer);
 // Incorporamos el MessageManager
 const message = new MessageManager();
 
-// Inicializamos el servidor para que nos muestre un mensaje cuando se conecte un nuevo usuario al conectarse al servidor. 
-socketServer.on("connection", async (socket) => { 
-  console.log("Nuevo cliente conectado")
+// Inicializamos el servidor para que nos muestre un mensaje cuando se conecte un nuevo usuario al conectarse al servidor.
+socketServer.on('connection', async (socket) => {
+  // Cada ves que se conecte un cliente al servidor se ejecuta el console log y el primer emit
+  console.log('Nuevo cliente conectado');
+
+  // Traemos los mensajes que están guardados en la base de datos y les mostramos a los clientes que se conectan.
+  const messages = await message.getMessages();
+  socketServer.emit('messageLog', messages);
 
   // Recibimos el message del cliente y lo almacenamos en la DB
-  socket.on("message", async data => {
+  socket.on('message', async (data) => {
     await message.saveMessage(data);
-    // Recuperamos los mensajes de la DB y se los enSviamos al cliente
-    const messages = await message.getMessages();
-    
-    socket.emit("messageLog", messages)
-  })
 
- })
+    // Recuperamos los mensajes de la DB y se los enviamos al cliente
+    const messages = await message.getMessages();
+    socketServer.emit('messageLog', messages);
+  });
+});

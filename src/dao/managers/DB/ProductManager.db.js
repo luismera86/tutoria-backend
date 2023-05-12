@@ -1,7 +1,7 @@
 // Importamos nuestros modelo de producto para trabajar sobre el con los métodos de mongoose
 import Product from '../../models/product.model.js';
 
-export class ProductManager {
+export class ProductManagerDB {
 
   // Llamamos todos los productos
   async getAllProducts() {
@@ -11,9 +11,10 @@ export class ProductManager {
 
   // Llamamos un producto por su id
   async getProductById(id) {
-    const product = await Product.findOne({ _id: id });
-    if (!product) return `No se encuentra el producto con el id ${id}`;
-    return product;
+    
+    const productFind = await Product.findOne({ _id: id });
+    if (!productFind) return `No se encuentra el producto con el id ${id}`;
+    return productFind;
   }
 
   // Agregamos un producto a nuestra base de datos
@@ -24,8 +25,8 @@ export class ProductManager {
 
     if (checkProductInfo) return 'Faltan propiedades al producto';
 
-    const product = await Product.create(product);
-    return product;
+    const newProduct = await Product.create(product);
+    return newProduct;
   }
 
   // Actualizamos un producto
