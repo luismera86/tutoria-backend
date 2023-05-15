@@ -1,8 +1,7 @@
 // Importamos el Router de express para poder trabajar las peticiones get, post, put y delete
 
-import { ProductManagerDB } from '../dao/managers/DB/ProductManager.db.js';
-import Product from '../dao/models/product.model.js';
 import { Router } from 'express';
+import { ProductManagerDB } from '../dao/managers/DB/ProductManager.db.js';
 
 // Importamos el ProductManager para utilizar los métodos necesarios en los endpoint
 
@@ -35,12 +34,33 @@ Creamos el primer endpoint get
   catch: es el manejador de errores en donde se atrapa el error ocurrido y se puede dar una respuesta del servidor.
 */
 router.get(`/${path}`, async (req, res) => {
+  const limit = req.query.limit;
+  const page = req.query.page
+  const sort = req.query.sort;
+  const query = req.query;
+
   try {
+
     // Lamamos los productos con el ProductManager
     const resProducts = await products.getAllProducts();
+    console.log(resProducts)
+    // const result = await products.getProductsLimit();
 
     // El servidor responde un json con el listado de productos solicitados por el cliente
-    res.status(200).json(resProducts);
+    // res.status(200).json({
+    //   status: success,
+    //   payload: resProducts,
+    //   totalPages: "",
+    //   prevPage: "",
+    //   nextPage: "",
+    //   page: "",
+    //   hasPrevPage: "Indicador para saber si la página previa existe true o false",
+    //   hasNexPage: "Indicador para saber si la página siguiente existe true o false",
+    //   prevLink: "link directo a la página previa si no existe va null",
+    //   nextLink: "Link directo a la página siguiente, si no existe va null"
+    // });
+
+    res.json({resProducts})
   } catch (error) {
     console.log(error);
   }
