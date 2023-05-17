@@ -4,32 +4,9 @@ import ProductModel from '../../models/product.model.js';
 
 export class ProductManagerDB {
   // Llamamos todos los productos
-  async getAllProducts(limit = 10, page = 1, query, sort = "asc") {
-    
-    // query tiene que poder buscarse por categoría o por disponibilidad de productos de acuerdo con su stock 
-    // el ordenamiento ascendente o descendente es en base al precio
-    
-    const products = await ProductModel.paginate({ query }, { limit, page, price: sort, lean: true });
-    
-    return products;
-  }
+  async getAllProducts(query, options) {
+    const products = await ProductModel.paginate(query, options);
 
-  // Llamamos los productos por límite
-  // async getProductsLimit(limit = 10) {
-  //   const products = await ProductModel.paginate({}, { limit }, { learn: true });
-  //   console.log(products.limit);
-  //   return products;
-  // }
-
-  // Llamamos los productos por orden de precio
-  async getProductsSort(sort) {
-    const products = await ProductModel.find().sort({ price: sort });
-    return products;
-  }
-
-  // Llamamos los productos filtrados por una query
-  async getProductsQuery(query) {
-    const products = await ProductModel.find({ query });
     return products;
   }
 

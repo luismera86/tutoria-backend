@@ -1,20 +1,25 @@
 import { Schema, model } from 'mongoose';
 
 const cartSchema = new Schema({
-  products: [
-    {
-      title: String,
-      price: Number,
-      description: String,
-      thumbnail: String,
-      status: Boolean,
-      stock: Number,
-      code: Number,
-      category: String,
-    },
-  ],
+  products: {
+    type: [
+      {
+        product: {
+          type: Schema.Types.ObjectId,
+          ref: "product"
+        },
+        quantity: Number
+      },
+    ],
+    default: []
+
+  },
 });
 
-const Cart = model('cart', cartSchema);
+cartSchema.pre("find", function () {
+  this.populate("products.product")
+})
 
-export default Cart;
+const CartModel = model('cart', cartSchema);
+
+export default CartModel;

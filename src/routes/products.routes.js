@@ -34,33 +34,50 @@ Creamos el primer endpoint get
   catch: es el manejador de errores en donde se atrapa el error ocurrido y se puede dar una respuesta del servidor.
 */
 router.get(`/${path}`, async (req, res) => {
-  const limit = req.query.limit;
-  const page = req.query.page
-  const sort = req.query.sort;
-  const query = req.query;
+  const { limit, page, sort, category, status } = req.query;
 
   try {
+    // query tiene que poder buscarse por categoría o por disponibilidad de productos de acuerdo con su stock
+    // el ordenamiento ascendente o descendente es en base al precio
+
+    const options = {
+      limit: limit || 10,
+      page: page || 1,
+      sort: {
+        price: sort === 'asc' ? 1 : -1,
+      },
+      lean: true,
+    };
+
+    if (status != undefined) {
+      const resProducts = await products.getAllProducts({ status: status }, options);
+      return res.json({ resProducts });
+    }
+
+    if (category != undefined) {
+      const resProducts = await products.getAllProducts({ category: category }, options);
+      return res.json({ resProducts });
+    }
 
     // Lamamos los productos con el ProductManager
-    const resProducts = await products.getAllProducts();
-    console.log(resProducts)
-    // const result = await products.getProductsLimit();
+    const resProducts = await products.getAllProducts({}, options);
+    const { totalPages, docs, hasPrevPage, hasNextPage, prevPage, nextPage } = resProducts;
 
-    // El servidor responde un json con el listado de productos solicitados por el cliente
-    // res.status(200).json({
-    //   status: success,
-    //   payload: resProducts,
-    //   totalPages: "",
-    //   prevPage: "",
-    //   nextPage: "",
-    //   page: "",
-    //   hasPrevPage: "Indicador para saber si la página previa existe true o false",
-    //   hasNexPage: "Indicador para saber si la página siguiente existe true o false",
-    //   prevLink: "link directo a la página previa si no existe va null",
-    //   nextLink: "Link directo a la página siguiente, si no existe va null"
-    // });
+    //El servidor responde un json con el listado de productos solicitados por el cliente
+    res.status(200).json({
+      status: 'success',
+      payload: docs,
+      totalPages,
+      prevPage,
+      nextPage,
+      page,
+      hasPrevPage,
+      hasNextPage,
+      prevLink: `http://localhost:8080/api/products?page=${prevPage}`,
+      nextLink: `http://localhost:8080/api/products?page=${nextPage}`,
+    });
 
-    res.json({resProducts})
+    res.json({ resProducts });
   } catch (error) {
     console.log(error);
   }
