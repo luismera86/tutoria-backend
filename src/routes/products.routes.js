@@ -62,7 +62,7 @@ router.get(`/${path}`, async (req, res) => {
     // Lamamos los productos con el ProductManager
     const resProducts = await products.getAllProducts({}, options);
     const { totalPages, docs, hasPrevPage, hasNextPage, prevPage, nextPage } = resProducts;
-
+    console.log(resProducts);
     //El servidor responde un json con el listado de productos solicitados por el cliente
     res.status(200).json({
       status: 'success',
@@ -77,7 +77,6 @@ router.get(`/${path}`, async (req, res) => {
       nextLink: `http://localhost:8080/api/products?page=${nextPage}`,
     });
 
-    res.json({ resProducts });
   } catch (error) {
     console.log(error);
   }

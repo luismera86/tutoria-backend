@@ -16,6 +16,7 @@ import cartsRouter from './routes/carts.routes.js';
 import productRouter from './routes/products.routes.js';
 import viewsRouters from './routes/views.routes.js';
 import { __dirname } from './utils.js';
+import { connectMongoDB } from './config/mongoDb.config.js';
 
 // Almacenamos el puerto en una constante
 const PORT = 8080;
@@ -23,8 +24,8 @@ const PORT = 8080;
 // Almacenamos express ejecutado en la constante app
 const app = express();
 
-// conectamos mongoose con la base de datos local
-mongoose.connect('mongodb://127.0.0.1:27017/tutoria');
+// Conectamos mongoose a la base de datos
+connectMongoDB();
 
 // Implementamos handlebars
 app.engine('handlebars', handlebars.engine());

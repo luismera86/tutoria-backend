@@ -42,3 +42,5 @@ export class ProductManagerDB {
     return productDelete;
   }
 }
+
+export const productsManager = new ProductManagerDB();
