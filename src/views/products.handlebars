@@ -3,10 +3,12 @@
   {{#each products}}
     <div class="border-1 border m-1 p-2">
       <h4 class="">{{title}}</h4>
-      <img src={{thumbnail[0]}} alt="">
+      <img src={{thumbnail}} alt="">
       <p>{{description}}</p>
       <p>{{price}}</p>
+      <a href="/product/{{_id}}">
       <button>Detalles</button>
+      </a>
     </div>
   {{/each}}
 </div>

@@ -33,7 +33,7 @@ router.get(`/products`, async (req, res) => {
     }
 
     const resProducts = await productsManager.getAllProducts({}, options);
-    console.log(resProducts)
+    console.log(resProducts);
     const { totalPages, docs, hasPrevPage, hasNextPage, prevPage, nextPage } = resProducts;
     res.render("products", {
       status: "success",
@@ -47,6 +47,17 @@ router.get(`/products`, async (req, res) => {
       prevLink: `http://localhost:8080/products?page=${prevPage}`,
       nextLink: `http://localhost:8080/products?page=${nextPage}`,
     });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.get("/product/:pid", async (req, res) => {
+  const { pid } = req.params;
+  try {
+    const product = await productsManager.getProductById(pid);
+
+    res.render("itemDetail", product);
   } catch (error) {
     console.log(error);
   }
