@@ -1,0 +1,16 @@
+{
+  "name": "tutoria-backend",
+  "version": "1.0.0",
+  "description": "![img](https://i.imgur.com/fpzB8CI.png)\r ![img](https://i.imgur.com/N99zFoW.png)",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

@@ -8,16 +8,15 @@ manejar información con texto plano
 
 */
 
-const fs = require('fs');
-
-const path = require("path");
+import fs from "fs";
+import { __dirname } from "./util.js";
 
 class ProductManager {
   constructor() {
     this.products = [];
-     // Implementamos un path general para toda la clase, es de buenas prácticas realizarlo así, en caso de cambiar
+    // Implementamos un path general para toda la clase, es de buenas prácticas realizarlo así, en caso de cambiar
     // la ruta se cambia directamente en todos los lugares que se instancia la clase
-    this.path = path.join(__dirname, "./data/products.json");
+    this.path = __dirname + "/data/products.json";
   }
 
   async addProduct(product) {
@@ -36,43 +35,46 @@ class ProductManager {
     if (productExists) throw new Error("Ya existe un producto con ese código");
 
     this.products.push(newProduct);
-    await fs.promises.writeFile(this.path, JSON.stringify(products));
-
+    await fs.promises.writeFile(this.path, JSON.stringify(this.products));
+    return newProduct;
   }
 
-  async getProducts() {
+  async getProducts(limit) {
     // leemos todos los productos del archivo json
-    const productsJson = await fs.promises.readFile(this.path, 'utf-8');
+    const productsJson = await fs.promises.readFile(this.path, "utf-8");
+
+    if (!limit) return JSON.parse(productsJson);
 
     // Verificamos si el archivo json no está vació, en caso que este vacío retorna un array []
     if (!productsJson.trim()) return [];
-    
 
-    // Una ves recibida la información del archivo json, está viene en formato texto plano,
-    // para que javascript pueda interpretarla como un array con productos tenemos que parsear la información
-    const productsParse = JSON.parse(productsJson);
+    // Chequeamos el limit
+    if (limit) {
+      // Si el limit es mayor a la cantidad de productos que tenemos, retornamos todos los productos
+      if (limit > productsJson.length) return JSON.parse(productsJson);
 
-    // retornamos los productos parseados
-    return productsParse;
+      // Si el limit es menor a la cantidad de productos que tenemos, retornamos la cantidad de productos que nos piden
+      return JSON.parse(productsJson).slice(0, limit);
+    }
   }
 
   async getProductById(id) {
-     // Primero llamamos todos los productos
-     const products = await this.getAllProducts();
+    // Primero llamamos todos los productos
+    const products = await this.getProducts();
 
-     // Luego buscamos entre los productos el producto que coincida con el id recibido
-     const product = products.find((product) => product.id === id);
- 
-     // Si el id enviado no coincide con algún id  de los productos retornamos un mensaje y termina aquí el método
-     if (!product) return `No se encontró el producto buscado con el id ${id}`;
- 
-     // En caso de que el producto exista retornamos el producto encontrado
-     return product;
+    // Luego buscamos entre los productos el producto que coincida con el id recibido
+    const product = products.find((product) => product.id === id);
+
+    // Si el id enviado no coincide con algún id  de los productos retornamos un mensaje y termina aquí el método
+    if (!product) return `No se encontró el producto buscado con el id ${id}`;
+
+    // En caso de que el producto exista retornamos el producto encontrado
+    return product;
   }
 
   async updateProductById(id, product) {
     // Primero llamamos todos los productos
-    const products = await this.getAllProducts();
+    const products = await this.getProducts();
 
     // Luego buscamos entre los productos el producto que coincida con el id recibido
     const productIndex = products.findIndex((product) => product.id === id);
@@ -92,7 +94,7 @@ class ProductManager {
 
   async deleteProductById(id) {
     // Llamamos a todos los productos guardados en el archivo json
-    const products = await this.getAllProducts();
+    const products = await this.getProducts();
 
     // Luego buscamos entre los productos el producto que coincida con el id recibido
     const product = products.find((product) => product.id === id);
@@ -111,37 +113,4 @@ class ProductManager {
   }
 }
 
-const product1 = new ProductManager();
-product1.addProduct({
-  title: "Producto 1",
-  description: "Descripción del producto 1",
-  price: 100,
-  thumbnail: "https://cdn3.iconfinder.com/data/icons/education-209/64/bus-vehicle-transport-school-128.png",
-  code: "ABC123",
-  stock: 10,
-});
-
-product1.addProduct({
-  title: "Producto 2",
-  description: "Descripción del producto 2",
-  price: 200,
-  thumbnail: "https://cdn3.iconfinder.com/data/icons/education-209/64/bus-vehicle-transport-school-128.png",
-  code: "ABC124",
-  stock: 10,
-});
-
-product1.getProducts();
-
-product1.getProductById(1);
-
-product1.updateProductById(1, {
-  title: "Producto 1",
-  description: "Descripción del producto 1",
-  price: 100,
-  thumbnail: "https://cdn3.iconfinder.com/data/icons/education-209/64/bus-vehicle-transport-school-128.png",
-  code: "ABC123",
-  stock: 10,
-});
-
-product1.deleteProductById(1);
-
+export const productManager = new ProductManager();
