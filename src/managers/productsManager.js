@@ -8,22 +8,21 @@ Manejamos la conexión con el método de persistencia de datos, en este caso usa
 manejar información con texto plano
 
 */
-const fs = require('fs');
-// path es una herramienta que viene integrada con node sirve para declarar rutas relativas a la raíz del proyecto 
-const path = require("path");
+import fs from "fs";
+
+import { __dirname } from "../utils.js";
 class ProductsManager {
   // En el constructor se coloca la información o datos o métodos que se quieren inicializar en cualquier instancia de clase
   constructor() {
     // Implementamos un path general para toda la clase, es de buenas prácticas realizarlo así, en caso de cambiar
     // la ruta se cambia directamente en todos los lugares que se instancia la clase
-    this.path = path.join(__dirname, "./data/products.json");
+    this.path = __dirname + "/data/products.json";
   }
 
   // Un método de una clase equivale a una función tradicional, solo que se puede ejecutar solo cuando se instancia la clase
   async getAllProducts() {
-    
     // leemos todos los productos del archivo json
-    const productsJson = await fs.promises.readFile(this.path, 'utf-8');
+    const productsJson = await fs.promises.readFile(this.path, "utf-8");
 
     // Verificamos si el archivo json no está vació, en caso que este vacío retorna un array []
     if (!productsJson.trim()) {
@@ -75,7 +74,7 @@ class ProductsManager {
     auto incrementable de acuerdo a la longitud del array de productos 
     */
     const newProduct = {
-      id: Date.now(), // Es un método rústico que uso para generar id únicos, el products.length + 1  el problema que tiene es que al eliminar un producto se repiten los id al agregar uno nuevo. 
+      id: Date.now(), // Es un método rústico que uso para generar id únicos, el products.length + 1  el problema que tiene es que al eliminar un producto se repiten los id al agregar uno nuevo.
       title,
       price,
       description,
@@ -95,13 +94,13 @@ class ProductsManager {
 
     // verificamos si el resultado del chequeo es true, esto quiere decir que algún valor del objeto
     // newProduct es undefined y retornamos un mensaje
-    if (checkProductInfo) return 'Faltan propiedades al producto';
+    if (checkProductInfo) return "Faltan propiedades al producto";
 
     // En caso de que todos las propiedades esten bien pusheamos en el array de productos el producto nuevo
     products.push(newProduct);
 
     // Guardamos el listado de productos con el newProduct en el archivo products.json reemplazando la información anterior
-    // el JSON.stringify() sirve para pasar a texto plano y se pueda guardar la información en un archivo json o txt. 
+    // el JSON.stringify() sirve para pasar a texto plano y se pueda guardar la información en un archivo json o txt.
     await fs.promises.writeFile(this.path, JSON.stringify(products));
 
     // Retornamos los productos con el nuevo producto agregado
@@ -140,7 +139,7 @@ class ProductsManager {
     const checkProductInfo = Object.values(products[productIndex]).includes(undefined);
 
     // verificamos si el resultado del chequeo es true, esto quiere decir que algún valor del objeto
-    if (checkProductInfo) return 'Faltan propiedades al producto';
+    if (checkProductInfo) return "Faltan propiedades al producto";
 
     // Guardamos en el archivo products.json la información actualizada
     await fs.promises.writeFile(this.path, JSON.stringify(products));
@@ -172,4 +171,4 @@ class ProductsManager {
   }
 }
 
-module.exports = ProductsManager;
+export const productsManager = new ProductsManager();

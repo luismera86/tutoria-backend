@@ -1,4 +1,3 @@
-
 /* 
 
 En este archivo no voy repetir la explicación de la lógica utilizada que es la misma 
@@ -6,22 +5,18 @@ del ProductManager, sino voy a detallar algunas particularidades del CartManager
 
 */
 
-const fs = require('fs');
-const path = require("path");
-const ProductsManager = require('./productsManager');
+import fs from "fs";
+
+import { __dirname } from "../utils.js";
+import { productsManager } from "./productsManager.js";
 
 class CartManager {
-
-  // Hacemos una instancia del ProductManager en la clase para poder traer el producto que tenemos que agregar al carrito
-  productsManager = new ProductsManager();
-
   constructor() {
-    this.path = path.join(__dirname, "./data/carts.json");
-
+    this.path = __dirname + "./data/carts.json";
   }
 
   async getAllCarts() {
-    const cartsJson = await fs.promises.readFile(this.path, 'utf-8');
+    const cartsJson = await fs.promises.readFile(this.path, "utf-8");
 
     if (!cartsJson.trim()) {
       return [];
@@ -35,7 +30,7 @@ class CartManager {
     const carts = await this.getAllCarts();
     const cart = carts.find((cart) => cart.id === id);
 
-    if (!cart) return 'No se encontró ningún cart';
+    if (!cart) return "No se encontró ningún cart";
 
     return cart;
   }
@@ -55,25 +50,25 @@ class CartManager {
   }
 
   async addProductToCart(idCart, idProduct) {
-   // Agregamos un producto en un carrito especifico
-   
+    // Agregamos un producto en un carrito especifico
+
     // Llamamos todos los carritos
     const carts = await this.getAllCarts();
-    
+
     // Traemos el producto enviado por id
-    const product = await this.productsManager.getProductById(idProduct);
+    const product = await productsManager.getProductById(idProduct);
 
     // Si el id enviado no coincide con algún id  de los productos retornamos un mensaje y termina aquí el método
     if (!product) return `No se encontró el producto buscado con el id ${id}`;
-    
+
     // Buscamos la posición indice del cart en el array de carts
-    const cartIndex = carts.findIndex(cart => cart.id === idCart);
+    const cartIndex = carts.findIndex((cart) => cart.id === idCart);
 
     // Si el id enviado no coincide con algún id  de los carts devuelve un -1 y respondemos un mensaje
     if (cartIndex === -1) return `No se encontró el cart buscado con el id ${id}`;
-    
-    // Si el cart se encuentra hacemos un push del product en su array de products 
-    carts[cartIndex].products.push(product)
+
+    // Si el cart se encuentra hacemos un push del product en su array de products
+    carts[cartIndex].products.push(product);
 
     // Guardamos el array de carts actualizado en carts.json
     await fs.promises.writeFile(this.path, JSON.stringify(carts));
@@ -92,4 +87,4 @@ class CartManager {
   }
 }
 
-module.exports = CartManager;
+export const cartManager = new CartManager();

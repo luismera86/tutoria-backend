@@ -1,14 +1,15 @@
-// Importamos express 
-const express = require('express');
+// Importamos express
+import express from "express";
 
 // Importamos las rutas que vamos a inicializar
-const productRouter = require('./routes/products.routes');
-const cartsRouter = require('./routes/carts.routes');
+import { routerProducts } from "./routes/products.routes.js";
+import { routerCarts } from "./routes/carts.routes.js";
+
 
 // Almacenamos el puerto en una constante
 const PORT = 8080;
 
-// Almacenamos express ejecutado en la constante app 
+// Almacenamos express ejecutado en la constante app
 const app = express();
 
 // Usamos express.json() para que express pueda interpretar los archivos json y recibidos en el body y los parsea para poder trabajarlos con javascript
@@ -18,8 +19,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Iniciamos las rutas importadas, las de products y carts para poder utilizar los endpoints
-app.use('/api', productRouter);
-app.use('/api', cartsRouter);
+app.use("/api/products", routerProducts);
+app.use("/api/carts", routerCarts);
 
 // Iniciamos el servidor en el puerto asignado en la constante PORT
 app.listen(PORT, () => {
