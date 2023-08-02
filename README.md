@@ -1,3 +1,3 @@
-## Desafio 1 - Clases ECMAScript y ECMAScript avanzado
-![](https://i.imgur.com/CTfv5uv.png)
-![](https://i.imgur.com/V4xJb9n.png)
+## Desafio 2 - Manejo de archivos
+![img](https://i.imgur.com/fpzB8CI.png)
+![img](https://i.imgur.com/N99zFoW.png)
