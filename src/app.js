@@ -7,11 +7,11 @@ import { Server } from "socket.io";
 // Importamos handlebars
 import handlebars from "express-handlebars";
 
-import { __dirname } from "./utils.js";
-import { routerProducts } from "./routes/products.routes.js";
+import { mongoDBConnection } from "./config/mongoDB.config.js";
+import { productManagerDB } from "./dao/managers/mongoDBManagers/product.manager.js";
 import { routerCarts } from "./routes/carts.routes.js";
+import { routerProducts } from "./routes/products.routes.js";
 import { routerViews } from "./routes/views.router.js";
-import { productsManager } from "./managers/productsManager.js";
 
 // Almacenamos el puerto en una constante
 const PORT = 8080;
@@ -23,6 +23,9 @@ const app = express();
 app.engine("handlebars", handlebars.engine());
 app.set("views", "views");
 app.set("view engine", "handlebars");
+
+// conectamos mongoose con la base de datos local
+mongoDBConnection();
 
 // Asignamos la carpeta donde van a estar los contenidos públicos
 app.use(express.static("public"));
@@ -44,7 +47,7 @@ const httpServer = app.listen(PORT, () => {
   console.log(`Servidor conectado en el puerto ${PORT}`);
 });
 
-const products = await productsManager.getAllProducts();
+const products = await productManagerDB.getAllProducts();
 
 // Configuramos el servidor de socket io
 const socketServer = new Server(httpServer);
@@ -57,10 +60,7 @@ socketServer.on("connection", (socket) => {
 
   // recibimos los productos desde el cliente
   socket.on("products", (data) => {
-    
     // enviamos los productos al cliente
     socket.emit("products", data);
-  }
-  );
-}
-);
+  });
+});

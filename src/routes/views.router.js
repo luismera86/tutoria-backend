@@ -1,35 +1,31 @@
 import { Router } from "express";
-import { productsManager } from "../managers/productsManager.js";
+import { productManagerDB } from "../dao/managers/mongoDBManagers/product.manager.js";
 
 const routerViews = Router();
 
 routerViews.get("/", async (req, res) => {
-  const products = await productsManager.getAllProducts();
+  const products = await productManagerDB.getAllProducts();
 
   res.render("home", { products });
 });
 
 routerViews.get("/realtimeproducts", async (req, res) => {
   try {
-    const products = await productsManager.getAllProducts();
-    res.render("realTimeProducts", { products });
+    
+    res.render("realTimeProducts");
   } catch (error) {
     console.log(error);
   }
 });
-
-routerViews.post("/realtimeproducts", async (req, res) => {
-  // Almacenamos en la constante body los datos del req.body recibidos
-  const body = req.body;
-  // console.log(body);
+routerViews.get("/chat", async (req, res) => {
   try {
-    console.log("entro al post");
-    const resProducts = await productsManager.addProduct(body);
-
-    res.json({ resProducts });
+    
+    res.render("chat");
   } catch (error) {
     console.log(error);
   }
 });
+
+
 
 export { routerViews };
