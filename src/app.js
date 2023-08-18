@@ -11,6 +11,7 @@ import { __dirname } from "./utils.js";
 import { routerProducts } from "./routes/products.routes.js";
 import { routerCarts } from "./routes/carts.routes.js";
 import { routerViews } from "./routes/views.router.js";
+import { productsManager } from "./managers/productsManager.js";
 
 // Almacenamos el puerto en una constante
 const PORT = 8080;
@@ -24,7 +25,7 @@ app.set("views", "views");
 app.set("view engine", "handlebars");
 
 // Asignamos la carpeta donde van a estar los contenidos públicos
-app.use(express.static("/public"));
+app.use(express.static("public"));
 
 // Usamos express.json() para que express pueda interpretar los archivos json y recibidos en el body y los parsea para poder trabajarlos con javascript
 app.use(express.json());
@@ -43,5 +44,23 @@ const httpServer = app.listen(PORT, () => {
   console.log(`Servidor conectado en el puerto ${PORT}`);
 });
 
+const products = await productsManager.getAllProducts();
+
 // Configuramos el servidor de socket io
 const socketServer = new Server(httpServer);
+
+// Configuramos los eventos de conexión y desconexión de los clientes
+socketServer.on("connection", (socket) => {
+  console.log("Cliente conectado");
+
+  socket.emit("products", products);
+
+  // recibimos los productos desde el cliente
+  socket.on("products", (data) => {
+    
+    // enviamos los productos al cliente
+    socket.emit("products", data);
+  }
+  );
+}
+);
