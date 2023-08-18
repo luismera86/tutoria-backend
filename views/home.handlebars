@@ -1,0 +1,20 @@
+{{!-- Mostramos los productos con una cad de bootstrap --}}
+
+<div>
+  <h1>Productos</h1>
+  <div class="row">
+    {{#each products}}
+      <div class="col-4">
+        <div class="card p-3 m-2 ">
+          <h5>{{title}}</h5>
+          <img src="{{image}}" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">{{name}}</h5>
+            <p class="card-text">{{description}}</p>
+            <a href="/product/{{id}}" class="btn btn-primary">Ver más</a>
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+</div>

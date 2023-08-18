@@ -1,0 +1,49 @@
+
+
+<form action="/api/products" method="post" id="productForm">
+  <label for="">Título</label>
+  <input type="text" name="title" id="title">
+  <label for="">Precio</label>
+  <input type="number" name="price" id="price">
+  <label for="">Descripción</label>
+  <input type="text" name="description" id="description">
+  <label for="">Imagen</label>
+  <input type="text" name="thumbnail" id="thumbnail">
+  <label for="">Status</label>
+  <select name="status" id="status">
+    <option value="disponible">Disponible</option>
+    <option value="no disponible">No disponible</option>
+  </select>
+  <label for="">Stock</label>
+  <input type="number" name="stock" id="stock">
+  <label for="">Código</label>
+  <input type="text" id="code" name="code">
+  <label for="">Categoría</label>
+  <input type="text" id="category" name="category">
+  <button type="submit">Agregar</button>
+</form>
+<form action="">
+  <label for="">ID producto a eliminar</label>
+  <input type="text" name="id" id="id">
+  <button type="submit">Eliminar</button>
+</form>
+
+
+<div>
+  <h1>Productos</h1>
+  <div class="row">
+    {{#each products}}
+      <div class="col-4">
+        <div class="card p-3 m-2 ">
+          <h5>{{title}}</h5>
+          <p>Id: {{id}}</p>
+          <div class="card-body">
+            <h5 class="card-title">{{name}}</h5>
+            <p class="card-text">{{description}}</p>
+            <a href="/product/{{id}}" class="btn btn-primary">Ver más</a>
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+</div>
