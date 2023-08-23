@@ -3,10 +3,12 @@ import Product from "../../models/product.model.js";
 
 class ProductManagerDB {
   // Llamamos todos los productos
-  async getAllProducts(limit, page, query, sort) {
+  async getAllProducts(query, options) {
 
     
-    const products = await Product.paginate({query}, {page, limit, sort});
+    const products = await Product.paginate(query, options);
+
+    return products;
 
     // const products = await Product.find();
     // return products;

@@ -5,11 +5,43 @@ import { productManagerDB } from "../dao/managers/mongoDBManagers/product.manage
 const routerProducts = Router();
 
 routerProducts.get("/", async (req, res) => {
-  const {limit = 10, page = 1, query = "", sort} = req.query;
-  try {
-    const resProducts = await productManagerDB.getAllProducts(limit, page, query, sort);
+  const { limit, page, sort, category, status } = req.query;
 
-    res.status(200).json(resProducts);
+  try {
+    const options = {
+      limit: limit || 10,
+      page: page || 1,
+      sort: {
+        price: sort === "asc" ? 1 : -1,
+      },
+      lean: true,
+    };
+
+    if (status != undefined) {
+      const resProducts = await productManagerDB.getAllProducts({ status: status }, options);
+      return res.json({ resProducts });
+    }
+
+    if (category != undefined) {
+      const resProducts = await productManagerDB.getAllProducts({ category: category }, options);
+      return res.json({ resProducts });
+    }
+
+    const resProducts = await productManagerDB.getAllProducts({}, options);
+    console.log(resProducts);
+    const { totalPages, docs, hasPrevPage, hasNextPage, prevPage, nextPage } = resProducts;
+    res.status(200).json( {
+      status: "success",
+      products: docs,
+      totalPages,
+      prevPage,
+      nextPage,
+      page: resProducts.page,
+      hasPrevPage,
+      hasNextPage,
+      prevLink: `http://localhost:8080/products?page=${prevPage}`,
+      nextLink: `http://localhost:8080/products?page=${nextPage}`,
+    });
   } catch (error) {
     console.log(error);
   }
