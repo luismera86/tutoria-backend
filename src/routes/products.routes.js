@@ -5,8 +5,9 @@ import { productManagerDB } from "../dao/managers/mongoDBManagers/product.manage
 const routerProducts = Router();
 
 routerProducts.get("/", async (req, res) => {
+  const {limit = 10, page = 1, query = "", sort} = req.query;
   try {
-    const resProducts = await productManagerDB.getAllProducts();
+    const resProducts = await productManagerDB.getAllProducts(limit, page, query, sort);
 
     res.status(200).json(resProducts);
   } catch (error) {

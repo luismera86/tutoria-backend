@@ -3,9 +3,13 @@ import Product from "../../models/product.model.js";
 
 class ProductManagerDB {
   // Llamamos todos los productos
-  async getAllProducts() {
-    const products = await Product.find();
-    return products;
+  async getAllProducts(limit, page, query, sort) {
+
+    
+    const products = await Product.paginate({query}, {page, limit, sort});
+
+    // const products = await Product.find();
+    // return products;
   }
 
   // Llamamos un producto por su id
