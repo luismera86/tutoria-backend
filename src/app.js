@@ -12,6 +12,7 @@ import { productManagerDB } from "./dao/managers/mongoDBManagers/product.manager
 import { routerCarts } from "./routes/carts.routes.js";
 import { routerProducts } from "./routes/products.routes.js";
 import { routerViews } from "./routes/views.router.js";
+import { messageManager } from "./dao/managers/mongoDBManagers/message.manager.js";
 
 // Almacenamos el puerto en una constante
 const PORT = 8080;
@@ -47,20 +48,38 @@ const httpServer = app.listen(PORT, () => {
   console.log(`Servidor conectado en el puerto ${PORT}`);
 });
 
-const products = await productManagerDB.getAllProducts();
+
 
 // Configuramos el servidor de socket io
 const socketServer = new Server(httpServer);
 
 // Configuramos los eventos de conexión y desconexión de los clientes
-socketServer.on("connection", (socket) => {
+socketServer.on("connection", async (socket) => {
   console.log("Cliente conectado");
-
+  const products = await productManagerDB.getAllProducts();
   socket.emit("products", products);
 
-  // recibimos los productos desde el cliente
-  socket.on("products", (data) => {
-    // enviamos los productos al cliente
-    socket.emit("products", data);
+  const messages = await messageManager.getMessages();
+  socket.emit("messages", messages);
+
+  socket.on("new-product", async (data) => {
+    await productManagerDB.addProduct(data);
+    const products = await productManagerDB.getAllProducts();
+    socket.emit("products", products);
   });
+  
+  socket.on("delete", async (id) => {
+    await productManagerDB.deleteProduct(id);
+    const products = await productManagerDB.getAllProducts();
+    socket.emit("products", products);
+  }
+  );
+
+  socket.on("chatMessage", async (data) => {
+    await messageManager.saveMessage(data);
+    const messages = await messageManager.getMessages();
+    socketServer.emit("messages", messages);
+  });
+
+  
 });

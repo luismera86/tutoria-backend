@@ -1,7 +1,5 @@
 const socket = io();
 
-// enviar un emit dentro de una petición POST
-
 const productForm = document.getElementById("productForm");
 const formDelete = document.getElementById("formDelete");
 
@@ -18,17 +16,7 @@ productForm.addEventListener("submit", (e) => {
     status: e.target.status.value,
   };
 
-  fetch("http://localhost:8080/api/products", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      socket.emit("products", data);
-    });
+  socket.emit("new-product", data);
 
   productForm.reset();
 });
@@ -37,16 +25,7 @@ formDelete.addEventListener("submit", (e) => {
   e.preventDefault();
   const id = e.target.id.value;
 
-  fetch(`http://localhost:8080/api/products/${id}`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      socket.emit("products", data);
-    });
+  socket.emit("delete", id);
 
   formDelete.reset();
 });
@@ -61,11 +40,11 @@ socket.on("products", (data) => {
       productsContainer.innerHTML += `
       <div class="col-4">
         <div class="card p-3 m-2 ">
-          <p>Id: ${product.id}</p>
+          <p>Id: ${product._id}</p>
           <div class="card-body">
             <h5 class="card-title">${product.title}</h5>
             <p class="card-text">${product.description}</p>
-            <a href="/product/${product.id}" class="btn btn-primary">Ver más</a>
+            <a href="/product/${product._id}" class="btn btn-primary">Ver más</a>
           </div>
         </div>
       </div>

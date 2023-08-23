@@ -17,11 +17,14 @@ class ProductManagerDB {
 
   // Agregamos un producto a nuestra base de datos
   async addProduct(product) {
-    const { title, price, description, thumbnail, status, stock, code, category } = product;
+    let { title, price, description, thumbnail, status, stock, code, category } = product;
 
     const checkProductInfo = Object.values(product).includes(undefined);
 
     if (checkProductInfo) return "Faltan propiedades al producto";
+
+    if (status = "true") product.status = true;
+    if (status = "false") product.status = false;
 
     const newProduct = await Product.create(product);
     return newProduct;

@@ -1,4 +1,5 @@
 import { Router } from "express";
+
 import { productManagerDB } from "../dao/managers/mongoDBManagers/product.manager.js";
 
 const routerProducts = Router();
@@ -27,7 +28,7 @@ routerProducts.get("/:id", async (req, res) => {
 routerProducts.post("/", async (req, res) => {
   const body = req.body;
   try {
-    const resProducts = await productsManager.addProduct(body);
+    const resProducts = await productManagerDB.addProduct(body);
 
     res.status(200).json(resProducts);
   } catch (error) {
@@ -40,9 +41,13 @@ routerProducts.put("/:id", async (req, res) => {
   const body = req.body;
 
   try {
-    const resProducts = await productsManager.updateProduct(id, body);
+    await productManagerDB.updateProduct(id, body);
+    const product = await productManagerDB.getProductById(id);
 
-    res.status(200).json(resProducts);
+    res.status(200).json({
+      msg: "Producto actualizado",
+      product,
+    });
   } catch (error) {
     console.log(error);
   }
@@ -51,8 +56,8 @@ routerProducts.put("/:id", async (req, res) => {
 routerProducts.delete("/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const resProduct = await productsManager.deleteProduct(id);
-    res.status(200).json(resProduct);
+    await productManagerDB.deleteProduct(id);
+    res.status(200).json({ msg: "Producto eliminado" });
   } catch (error) {
     console.log(error);
   }

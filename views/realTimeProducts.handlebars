@@ -1,33 +1,42 @@
 
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form id="productForm" class="d-flex flex-column col-4 ms-3">
+      <label for="">Título</label>
+      <input type="text" name="title" id="title" />
+      <label for="">Precio</label>
+      <input type="number" name="price" id="price" />
+      <label for="">Descripción</label>
+      <input type="text" name="description" id="description" />
+      <label for="">Imagen</label>
+      <input type="text" name="thumbnail" id="thumbnail" />
+      <label for="">Status</label>
+      <select name="status" id="status">
+        <option value="true">Disponible</option>
+        <option value="false">No disponible</option>
+      </select>
+      <label for="">Stock</label>
+      <input type="number" name="stock" id="stock" />
+      <label for="">Código</label>
+      <input type="text" id="code" name="code" />
+      <label for="">Categoría</label>
+      <input type="text" id="category" name="category" />
+      <button type="submit" class="btn btn-primary">Agregar</button>
+    </form>
+    <form action="" class="ms-3 mt-3" id="formDelete">
+      <label for="">ID producto a eliminar</label>
+      <input type="text" name="id" id="id" />
+      <button type="submit" class="btn btn-danger">Eliminar</button>
+    </form>
 
-<form id="productForm" class="d-flex flex-column  col-4 ms-3 ">
-  <label for="">Título</label>
-  <input type="text" name="title" id="title">
-  <label for="">Precio</label>
-  <input type="number" name="price" id="price">
-  <label for="">Descripción</label>
-  <input type="text" name="description" id="description">
-  <label for="">Imagen</label>
-  <input type="text" name="thumbnail" id="thumbnail">
-  <label for="">Status</label>
-  <select name="status" id="status">
-    <option value="disponible">Disponible</option>
-    <option value="no disponible">No disponible</option>
-  </select>
-  <label for="">Stock</label>
-  <input type="number" name="stock" id="stock">
-  <label for="">Código</label>
-  <input type="text" id="code" name="code">
-  <label for="">Categoría</label>
-  <input type="text" id="category" name="category">
-  <button type="submit" class="btn btn-primary ">Agregar</button>
-</form>
-<form action="" class="ms-3 mt-3" id="formDelete">
-  <label for="">ID producto a eliminar</label>
-  <input type="text" name="id" id="id">
-  <button type="submit" class="btn btn-danger ">Eliminar</button>
-</form>
+    <div id="productsContainer" class="row"></div>
 
-<div id="productsContainer" class="row"></div>
-
-
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/index.js"></script>
+  </body>
+</html>

@@ -1,12 +1,24 @@
-<form id="form" class="m-3 col-3">
-  <label>Email</label>
-  <input class="form-control" id="user" name="user" type="text">
-  <label>Message</label>
-  <textarea class="form-control" id="message" name="message" type="text"> </textarea>
-  <input class="btn btn-primary mt-2" id="btn" type="submit" value="Enviar">
-</form>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
 
-<h4>Mensajes de chat</h4>
-<div id="messages">
- 
-</div>
+    <form id="chatForm" class="m-3 col-3">
+      <label>Email</label>
+      <input class="form-control" id="user" name="user" type="text" />
+      <label>Message</label>
+      <textarea class="form-control" id="message" name="message" type="text"> </textarea>
+      <input class="btn btn-primary mt-2" id="btn" type="submit" value="Enviar" />
+    </form>
+
+    <h4>Mensajes de chat</h4>
+    <div id="chatMessages">
+
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/chat.js"></script>
+  </body>
+</html>

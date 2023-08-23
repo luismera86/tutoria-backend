@@ -35,10 +35,9 @@ routerCarts.post("/:idCart/product/:idProduct", async (req, res) => {
   const { idCart, idProduct } = req.params;
   try {
     // ! Tener en cuenta las posición en que envía los id, hay que respetar como se implemento en el método
-    const carts = await cartManagerDB.addProductToCart(idCart, idProduct);
+    await cartManagerDB.addProductToCart(idCart, idProduct);
 
-    // El servidor envía la respuesta de método addProductToCart
-    res.status(200).json(carts);
+    res.status(200).json({ msg: "Producto agregado al carrito" });
   } catch (error) {
     console.log(error);
   }

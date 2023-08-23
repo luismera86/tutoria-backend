@@ -28,8 +28,11 @@ class CartManagerDB {
   // Agregamos un product al array products de Cart
   async addProductToCart(idCart, idProduct) {
     const product = await Product.findOne({ _id: idProduct });
+    const car = await Cart.findOne({ _id: idCart });
+    if (!car) return `El carrito con el id ${idCart} no existe`;
     if (!product) return `El producto con el id ${idProduct} no existe`;
     const cartUpdate = await Cart.updateOne({ _id: idCart }, { $push: { products: product } });
+
     return cartUpdate;
   }
 

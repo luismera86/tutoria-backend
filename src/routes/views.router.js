@@ -4,14 +4,17 @@ import { productManagerDB } from "../dao/managers/mongoDBManagers/product.manage
 const routerViews = Router();
 
 routerViews.get("/", async (req, res) => {
-  const products = await productManagerDB.getAllProducts();
-
-  res.render("home", { products });
+  try {
+    const products = await productManagerDB.getAllProducts();
+    
+    res.render("home");
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 routerViews.get("/realtimeproducts", async (req, res) => {
   try {
-    
     res.render("realTimeProducts");
   } catch (error) {
     console.log(error);
@@ -19,13 +22,10 @@ routerViews.get("/realtimeproducts", async (req, res) => {
 });
 routerViews.get("/chat", async (req, res) => {
   try {
-    
     res.render("chat");
   } catch (error) {
     console.log(error);
   }
 });
-
-
 
 export { routerViews };
