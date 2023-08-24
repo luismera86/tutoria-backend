@@ -31,7 +31,7 @@ routerCarts.post("/", async (req, res) => {
   }
 });
 
-routerCarts.post("/:idCart/product/:idProduct", async (req, res) => {
+routerCarts.post("/:idCart/products/:idProduct", async (req, res) => {
   const { idCart, idProduct } = req.params;
   try {
     // ! Tener en cuenta las posición en que envía los id, hay que respetar como se implemento en el método
@@ -46,9 +46,9 @@ routerCarts.post("/:idCart/product/:idProduct", async (req, res) => {
 routerCarts.delete("/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const carts = await cartManagerDB.deleteCart(id);
+    await cartManagerDB.deleteCart(id);
 
-    res.status(200).json(carts);
+    res.status(200).json({ msg: "Carrito eliminado" });
   } catch (error) {
     console.log(error);
   }
@@ -59,6 +59,43 @@ routerCarts.get("/", async (req, res) => {
     const carts = await cartManagerDB.getAllCarts();
 
     res.status(200).json(carts);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+routerCarts.delete("/:cid/products/:pid", async (req, res) => {
+  const { cid, pid } = req.params;
+  try {
+    const cart = await cartManagerDB.deleteProductFromCart(cid, pid);
+    console.log(cart)
+    res.status(200).json({ msg: "Producto eliminado del carrito"  });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+routerCarts.put("/:cid", async (req, res) => {
+  const { cid } = req.params;
+  const products = req.body;
+
+  try {
+    const cart = await cartManagerDB.updateCart(cid, products);
+    res.status(200).json(cart);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+routerCarts.put("/:cid/products/:pid", async (req, res) => {
+  const { cid, pid } = req.params;
+  const { quantity } = req.body;
+  try {
+
+    const cart = await cartManagerDB.updateProductQuantity(cid, pid, quantity);
+
+    res.status(200).json(cart);
+    
   } catch (error) {
     console.log(error);
   }

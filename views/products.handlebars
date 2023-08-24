@@ -1,0 +1,28 @@
+<h2>Productos</h2>
+<div class="d-flex flex-row flex-wrap container">
+  {{#each products}}
+    <div class="border-1 border m-1 p-2">
+      <h4 class="">{{title}}</h4>
+      <img src={{thumbnail}} alt="">
+      <p>{{description}}</p>
+      <p>{{price}}</p>
+      <a href="/product/{{_id}}">
+      <button>Detalles</button>
+      </a>
+    </div>
+  {{/each}}
+</div>
+<div class="container d-flex "> 
+  {{! Indicamos que los botones aparezcan mientras prevPage y nextPage no sean null }}
+  {{#if prevPage}}
+    <a href={{prevLink}}>
+      <button>Anterior</button>
+    </a>
+  {{/if}}
+  <p class="mx-2 ">Page {{this.page}}</p>
+  {{#if nextPage}}
+    <a href={{nextLink}}>
+      <button>Siguiente</button>
+    </a>
+  {{/if}}
+</div>

@@ -1,6 +1,7 @@
 // Importamos nuestros modelo de Cart para trabajar sobre el con los métodos de mongoose
 import Cart from "../../models/cart.model.js";
 import Product from "../../models/product.model.js";
+import { productManagerDB } from "./product.manager.js";
 
 class CartManagerDB {
   // Llamamos todos los Carts
@@ -27,12 +28,24 @@ class CartManagerDB {
 
   // Agregamos un product al array products de Cart
   async addProductToCart(idCart, idProduct) {
-    const product = await Product.findOne({ _id: idProduct });
-    const car = await Cart.findOne({ _id: idCart });
-    if (!car) return `El carrito con el id ${idCart} no existe`;
-    if (!product) return `El producto con el id ${idProduct} no existe`;
-    const cartUpdate = await Cart.updateOne({ _id: idCart }, { $push: { products: product } });
+    const cart = await this.getCartById(idCart);
+    const product = await productManagerDB.getProductById(idProduct);
 
+    const cartUpdate = await Cart.findOneAndUpdate(
+      { _id: cart._id, 'products.product': product._id },
+      { $inc: { 'products.$.quantity': 1 } },
+      { new: true }
+    );
+  
+    if (!cartUpdate) {
+      const newCart = await Cart.findByIdAndUpdate(
+        idCart,
+        { $push: { products: { product: product._id, quantity: 1 } } },
+        { new: true }
+      );
+      return newCart;
+    }
+  
     return cartUpdate;
   }
 
@@ -41,6 +54,56 @@ class CartManagerDB {
     const cartDelete = await Cart.deleteOne({ _id: id });
 
     return cartDelete;
+  }
+
+  // Eliminar un producto de un Cart
+  async deleteProductFromCart(idCart, idProduct) {
+
+    const cart = await this.getCartById(idCart);
+    
+    const product = await productManagerDB.getProductById(idProduct);
+
+    const cartUpdate = await cart.updateOne({ $pull: { products: { _id: product._id } } });
+
+    return cartUpdate;
+
+  }
+
+  // Actualizamos un Cart
+  async updateCart(idCart, cartData) {
+
+    const cart = await this.getCartById(idCart);
+
+    const cartUpdate = await cart.updateOne(cartData);
+
+    return cartUpdate;
+
+  }
+
+  // Actualizamos la cantidad del producto en el Cart
+  async updateProductQuantity(idCart, idProduct, quantity) {
+      
+      const cart = await this.getCartById(idCart);
+  
+      const product = await productManagerDB.getProductById(idProduct);
+      const cartUpdate = await cart.findOneAndUpdate(
+        { _id: cart._id, 'products.product': product._id },
+        { $inc: { 'products.$.quantity': -1 } },
+        { new: true }
+      );
+    
+      if (cartUpdate) {
+        const product = cartUpdate.products.find(prod => prod.product == idProduct);
+    
+        if (product.quantity === 0) {
+          await Cart.findOneAndUpdate(
+            { _id: idCart },
+            { $pull: { products: { product: idProduct } } }
+          );
+        }
+    
+        return cartUpdate;
+      }
   }
 }
 
