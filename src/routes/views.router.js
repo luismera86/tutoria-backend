@@ -53,7 +53,7 @@ routerViews.get("/products", async (req, res) => {
     }
 
     const resProducts = await productManagerDB.getAllProducts({}, options);
-    console.log(resProducts);
+
     const { totalPages, docs, hasPrevPage, hasNextPage, prevPage, nextPage } = resProducts;
     res.render("products", {
       status: "success",
@@ -88,12 +88,12 @@ routerViews.get("/cart/:cid", async (req, res) => {
   const { cid } = req.params;
   try {
     const cart = await cartManagerDB.getCartById(cid);
-    console.log(cart);
+    if (!cart) return res.status(404).json({ msg: "Carrito no encontrado" });
 
-    res.render("cart", cart);
+    res.render("cart", { products: cart.products });
   } catch (error) {
     console.log(error);
   }
-})
+});
 
 export { routerViews };

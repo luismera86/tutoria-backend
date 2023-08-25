@@ -21,7 +21,15 @@ const PORT = 8080;
 const app = express();
 
 // Implementamos handlebars
-app.engine("handlebars", handlebars.engine());
+app.engine(
+  "handlebars",
+  handlebars.engine({
+    runtimeOptions: {
+      allowProtoPropertiesByDefault: true,
+      allowProtoMethodsByDefault: true,
+    },
+  })
+);
 app.set("views", "views");
 app.set("view engine", "handlebars");
 
@@ -48,8 +56,6 @@ const httpServer = app.listen(PORT, () => {
   console.log(`Servidor conectado en el puerto ${PORT}`);
 });
 
-
-
 // Configuramos el servidor de socket io
 const socketServer = new Server(httpServer);
 
@@ -67,19 +73,16 @@ socketServer.on("connection", async (socket) => {
     const products = await productManagerDB.getAllProducts();
     socket.emit("products", products);
   });
-  
+
   socket.on("delete", async (id) => {
     await productManagerDB.deleteProduct(id);
     const products = await productManagerDB.getAllProducts();
     socket.emit("products", products);
-  }
-  );
+  });
 
   socket.on("chatMessage", async (data) => {
     await messageManager.saveMessage(data);
     const messages = await messageManager.getMessages();
     socketServer.emit("messages", messages);
   });
-
-  
 });
