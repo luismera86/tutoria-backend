@@ -1,11 +1,8 @@
-// Importamos express
 import express from "express";
-
-// Importamos sockets io
 import { Server } from "socket.io";
-
-// Importamos handlebars
 import handlebars from "express-handlebars";
+import cookieParser from "cookie-parser";
+import session from "express-session";
 
 import { mongoDBConnection } from "./config/mongoDB.config.js";
 import { productManagerDB } from "./dao/managers/mongoDBManagers/product.manager.js";
@@ -14,8 +11,9 @@ import { routerProducts } from "./routes/products.routes.js";
 import { routerViews } from "./routes/views.router.js";
 import { messageManager } from "./dao/managers/mongoDBManagers/message.manager.js";
 
-// Almacenamos el puerto en una constante
+// Datos de configuración del servidor
 const PORT = 8080;
+const cookieSecret = "C0D3R";
 
 // Almacenamos express ejecutado en la constante app
 const app = express();
@@ -36,13 +34,14 @@ app.set("view engine", "handlebars");
 // conectamos mongoose con la base de datos local
 mongoDBConnection();
 
-// Asignamos la carpeta donde van a estar los contenidos públicos
 app.use(express.static("public"));
 
-// Usamos express.json() para que express pueda interpretar los archivos json y recibidos en el body y los parsea para poder trabajarlos con javascript
 app.use(express.json());
 
-// express.urlencoded es una función proporcionada por Express. Esta función se utiliza para analizar los datos que se envían desde un formulario HTML que se envía mediante el método HTTP POST.
+app.use(cookieParser(cookieSecret));
+
+app.use(session({ secret: cookieSecret, resave: true, saveUninitialized: true }));
+
 app.use(express.urlencoded({ extended: true }));
 
 // Iniciamos las rutas importadas, las de products y carts para poder utilizar los endpoints
