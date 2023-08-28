@@ -9,6 +9,7 @@ import { productManagerDB } from "./dao/managers/mongoDBManagers/product.manager
 import { routerCarts } from "./routes/carts.routes.js";
 import { routerProducts } from "./routes/products.routes.js";
 import { routerViews } from "./routes/views.router.js";
+import { routerSessions } from "./routes/sessions.routes.js";
 import { messageManager } from "./dao/managers/mongoDBManagers/message.manager.js";
 
 // Datos de configuración del servidor
@@ -47,6 +48,7 @@ app.use(express.urlencoded({ extended: true }));
 // Iniciamos las rutas importadas, las de products y carts para poder utilizar los endpoints
 app.use("/api/products", routerProducts);
 app.use("/api/carts", routerCarts);
+app.use("/api/sessions", routerSessions);
 app.use("/", routerViews);
 
 // Iniciamos el servidor en el puerto asignado en la constante PORT
