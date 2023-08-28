@@ -1,0 +1,11 @@
+{{! Mostramos los datos del usuario logueado }}
+
+<div class="container">
+  <p>Nombre: {{user.first_name}} {{user.last_name}}</p>
+  <p>Email: {{user.email}}</p>
+  <p>Rol: {{user.role}}</p>
+
+  <form action="/logout" method="get">
+    <input type="submit" class="btn btn-danger" value="Log Out" />
+  </form>
+</div>

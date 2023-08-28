@@ -1,0 +1,38 @@
+{{!-- Formulario de registro --}}
+
+<div class="container">
+  <h2>Registro</h2>
+
+  <form action="/register" method="POST">
+    <div>
+      <label for="first_name">Nombre</label>
+      <input type="text" name="first_name" id="first_name" placeholder="Nombre" required />
+    </div>
+    <div>
+      <label for="last_name">Apellidos</label>
+      <input type="text" name="last_name" id="last_name" placeholder="Apellidos" required />
+    </div>
+    <div>
+      <label for="email">Email</label>
+      <input type="email" name="email" id="email" placeholder="Email" required />
+    </div>
+    <div>
+      <label for="age">Edad</label>
+      <input type="age" name="age" id="age" placeholder="Edad" required />
+    </div>
+    <div>
+      <label for="password">Password</label>
+      <input type="password" name="password" id="password" placeholder="Password" required />
+    </div>
+    <button type="submit">Registro</button>
+  </form>
+
+  {{!-- Si hay un error en el registro mostramos el mensaje que nos envía el servidor --}}
+  {{#if error}}
+    <p>{{error}}</p>
+  {{/if}}
+
+  <p>¿Ya tienes cuenta?</p>
+  <a href="/login">Login</a>
+
+</div>

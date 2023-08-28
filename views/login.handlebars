@@ -1,18 +1,25 @@
-{{!-- Formulario de login --}}
+{{! Formulario de login }}
+<div class="container">
+  <h2>Login</h2>
 
-<h2>Login</h2>
-
-<form action="/login" method="POST">
+  <form action="/login" method="POST">
     <div>
-        <label for="email">Email</label>
-        <input type="email" name="email" id="email" placeholder="Email" required>
+      <label for="email">Email</label>
+      <input type="email" name="email" id="email" placeholder="Email" required />
     </div>
     <div>
-        <label for="password">Password</label>
-        <input type="password" name="password" id="password" placeholder="Password" required>
+      <label for="password">Password</label>
+      <input type="password" name="password" id="password" placeholder="Password" required />
     </div>
     <button type="submit">Login</button>
-</form>
+  </form>
 
-<p>¿No tienes cuenta?</p>
-<a href="/register">Regístrate</a>
+  {{! Si hay un error en el login mostramos el mensaje que nos envía el servidor }}
+  {{#if error}}
+    <p>{{error}}</p>
+  {{/if}}
+
+  <p>¿No tienes cuenta?</p>
+  <a href="/register">Regístrate</a>
+
+</div>
