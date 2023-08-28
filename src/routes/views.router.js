@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { productManagerDB } from "../dao/managers/mongoDBManagers/product.manager.js";
 import { cartManagerDB } from "../dao/managers/mongoDBManagers/cart.manager.js";
+import { productManagerDB } from "../dao/managers/mongoDBManagers/product.manager.js";
 import { userManager } from "../dao/managers/mongoDBManagers/user.manager.js";
-import { createHash } from "../utils/hashPasswor.js";
+import { createHash, isValidPassword } from "../utils/hashPassword.js";
 
 const routerViews = Router();
 
@@ -112,7 +112,8 @@ routerViews.post("/login", async (req, res) => {
   try {
     // Verificamos los datos ingresados
     const user = await userManager.getUserByEmail(email);
-    if (!user || user.password !== password) return res.render("login", { error: "Usuario o contraseña incorrectos" });
+  
+    if (!user || !isValidPassword(user, password)) return res.render("login", { error: "Usuario o contraseña incorrectos" });
 
     const { first_name, last_name, age, email: emailUser } = user;
     // Verificamos si el usuario es administrador le asignamos el rol de admin sino le asignamos el rol de user
@@ -170,7 +171,7 @@ routerViews.post("/register", async (req, res) => {
       last_name,
       email,
       age,
-      password,
+      password: createHash(password),
     });
 
     // Devolvemos el usuario creado
@@ -237,3 +238,4 @@ routerViews.post("/resetpassword", async (req, res) => {
 });
 
 export { routerViews };
+

@@ -13,6 +13,9 @@
     </div>
     <button type="submit">Login</button>
   </form>
+  <form action="/api/sessions/github" method="get">
+    <button type="submit">Login con GitHub</button>
+  </form>
 
   {{! Si hay un error en el login mostramos el mensaje que nos envía el servidor }}
   {{#if error}}
