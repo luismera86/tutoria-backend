@@ -2,6 +2,7 @@ import { Router } from "express";
 import { productManagerDB } from "../dao/managers/mongoDBManagers/product.manager.js";
 import { cartManagerDB } from "../dao/managers/mongoDBManagers/cart.manager.js";
 import { userManager } from "../dao/managers/mongoDBManagers/user.manager.js";
+import { createHash } from "../utils/hashPasswor.js";
 
 const routerViews = Router();
 
@@ -204,6 +205,32 @@ routerViews.get("/logout", async (req, res) => {
       // Redireccionamos al login
       res.redirect("/login");
     });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// Vista restaurar contraseña
+routerViews.get("/resetpassword", async (req, res) => {
+  try {
+    res.render("resetPassword");
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+routerViews.post("/resetpassword", async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    
+    const user = await userManager.getUserByEmail(email);
+    if (!user) return res.render("resetPassword", { error: `El usuario con el mail ${email} no existe` });
+
+    // Actualizamos la contraseña
+    await userManager.changePassword(email, createHash(password));
+
+    res.redirect("/login");
+    
   } catch (error) {
     console.log(error);
   }
