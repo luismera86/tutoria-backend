@@ -1,14 +1,15 @@
-import Message from "../../models/message.model.js";
+import { messageModel } from "../../models/message.model.js";
+
 
 class MessageManager {
   async getMessages() {
-    const messages = await Message.find();
+    const messages = await messageModel.find();
 
     return messages;
   }
 
   async saveMessage(message) {
-    const newMessage = await Message.create(message);
+    const newMessage = await messageModel.create(message);
 
     return newMessage;
   }

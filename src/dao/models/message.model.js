@@ -5,6 +5,6 @@ const messageSchema = new Schema({
   message: String,
 });
 
-const Message = model("message", messageSchema);
+const messageModel = model("message", messageSchema);
 
-export default Message;
+export { messageModel };

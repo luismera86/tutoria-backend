@@ -13,10 +13,10 @@ import { routerViews } from "./routes/views.router.js";
 import { routerSessions } from "./routes/sessions.routes.js";
 import { messageManager } from "./dao/managers/mongoDBManagers/message.manager.js";
 import { initializePassport } from "./config/passport.config.js";
+import config from "./config/config.js";
 
 // Datos de configuración del servidor
-const PORT = 8080;
-const cookieSecret = "C0D3R";
+const { PORT, COOKIE_SECRET } = config;
 
 // Almacenamos express ejecutado en la constante app
 const app = express();
@@ -41,9 +41,9 @@ app.use(express.static("public"));
 
 app.use(express.json());
 
-app.use(cookieParser(cookieSecret));
+app.use(cookieParser(COOKIE_SECRET));
 
-app.use(session({ secret: cookieSecret, resave: true, saveUninitialized: true }));
+app.use(session({ secret: COOKIE_SECRET, resave: true, saveUninitialized: true }));
 
 initializePassport();
 app.use(passport.initialize());
