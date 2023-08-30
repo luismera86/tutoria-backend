@@ -15,6 +15,7 @@ import {
   viewRegister,
   viewResetPassword,
 } from "../controllers/views.controllers.js";
+import { checkToken } from "../middlewares/checkToken.js";
 
 const routerViews = Router();
 
@@ -24,11 +25,11 @@ routerViews.get("/realtimeproducts", realTimeProducts);
 
 routerViews.get("/chat", chat);
 
-routerViews.get("/products", products);
+routerViews.get("/products", checkToken, products);
 
-routerViews.get("/product/:pid", productDetail);
+routerViews.get("/product/:pid", checkToken, productDetail);
 
-routerViews.get("/cart/:cid", cartDetail);
+routerViews.get("/cart/:cid", checkToken, cartDetail);
 
 // Vista de login
 routerViews.get("/login", viewLogin);
@@ -41,10 +42,10 @@ routerViews.get("/register", viewRegister);
 routerViews.post("/register", registerUser);
 
 // Vista de perfil
-routerViews.get("/profile", viewProfile);
+routerViews.get("/profile", checkToken, viewProfile);
 
 // Cerrar sesión
-routerViews.get("/logout", logoutUser);
+routerViews.get("/logout", checkToken, logoutUser);
 
 // Vista restaurar contraseña
 routerViews.get("/resetpassword", viewResetPassword);
@@ -52,4 +53,3 @@ routerViews.get("/resetpassword", viewResetPassword);
 routerViews.post("/resetpassword", resetPassword);
 
 export { routerViews };
-

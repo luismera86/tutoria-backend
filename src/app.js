@@ -6,12 +6,12 @@ import session from "express-session";
 import passport from "passport";
 
 import { mongoDBConnection } from "./config/mongoDB.config.js";
-import { productManagerDB } from "./dao/managers/mongoDBManagers/product.manager.js";
 import { routerCarts } from "./routes/carts.routes.js";
 import { routerProducts } from "./routes/products.routes.js";
 import { routerViews } from "./routes/views.router.js";
 import { routerSessions } from "./routes/sessions.routes.js";
-import { messageManager } from "./dao/managers/mongoDBManagers/message.manager.js";
+import * as messageServices from "./services/message.services.js";
+import * as productServices from "./services/product.services.js";
 import { initializePassport } from "./config/passport.config.js";
 import config from "./config/config.js";
 
@@ -72,27 +72,27 @@ const socketServer = new Server(httpServer);
 // Configuramos los eventos de conexión y desconexión de los clientes
 socketServer.on("connection", async (socket) => {
   console.log("Cliente conectado");
-  const products = await productManagerDB.getAllProducts();
+  const products = await productServices.getAllProducts();
   socket.emit("products", products);
 
-  const messages = await messageManager.getMessages();
+  const messages = await messageServices.getMessages();
   socket.emit("messages", messages);
 
   socket.on("new-product", async (data) => {
-    await productManagerDB.addProduct(data);
-    const products = await productManagerDB.getAllProducts();
+    await productServices.addProduct(data);
+    const products = await productServices.getAllProducts();
     socket.emit("products", products);
   });
 
   socket.on("delete", async (id) => {
-    await productManagerDB.deleteProduct(id);
-    const products = await productManagerDB.getAllProducts();
+    await productServices.deleteProduct(id);
+    const products = await productServices.getAllProducts();
     socket.emit("products", products);
   });
 
   socket.on("chatMessage", async (data) => {
-    await messageManager.saveMessage(data);
-    const messages = await messageManager.getMessages();
+    await messageServices.saveMessage(data);
+    const messages = await messageServices.getMessages();
     socketServer.emit("messages", messages);
   });
 });

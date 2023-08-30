@@ -10,6 +10,7 @@ import {
   updateProductQuantityFromCart,
   updateProductsFromCart,
 } from "../controllers/cart.controllers.js";
+import { isAuthorize } from "../middlewares/checkUser.js";
 
 const routerCarts = Router();
 
@@ -20,13 +21,13 @@ routerCarts.get("/", getAllCarts);
 routerCarts.get("/:cid", getCartById);
 
 // Agregamos un carrito
-routerCarts.post("/", addCart);
+routerCarts.post("/", isAuthorize, addCart);
 
 // Agregamos un producto a un carrito
 routerCarts.post("/:cid/products/:pid", addProductToCart);
 
 // Eliminamos un carrito
-routerCarts.delete("/:cid", deleteCart);
+routerCarts.delete("/:cid", isAuthorize, deleteCart);
 
 // Eliminamos todos los productos de un carrito
 routerCarts.delete("/:cid/products", deleteAllProductsFromCart);
@@ -38,6 +39,6 @@ routerCarts.delete("/:cid/products/:pid", deleteProductFromCart);
 routerCarts.put("/:cid", updateProductsFromCart);
 
 // Actualizamos la cantidad de un producto en el carrito
-routerCarts.put("/:cid/products/:pid", updateProductQuantityFromCart);
+routerCarts.put("/:cid/products/:pid", isAuthorize, updateProductQuantityFromCart);
 
 export { routerCarts };
