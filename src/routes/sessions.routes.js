@@ -5,13 +5,14 @@ const routerSessions = Router();
 
 routerSessions.post("/login", passport.authenticate("login", { failureRedirect: "faillogin" }), async (req, res) => {
   if (!req.user) return res.status(400).send({ status: "error", message: "Error credenciales inválidas" });
-  const { first_name, last_name, age, email } = req.user;
+  const { first_name, last_name, age, email, role } = req.user;
 
   req.session.user = {
     first_name,
     last_name,
     age,
     email,
+    role,
   };
 
   res.send({ status: "success", payload: req.user });
@@ -53,6 +54,14 @@ routerSessions.get("/github", passport.authenticate("github", { scope: ["user:em
 routerSessions.get("/githubcallback", passport.authenticate("github", { failureRedirect: "login" }), async (req, res) => {
   req.session.user = req.user;
   res.redirect("/profile");
+});
+
+routerSessions.get("/current", async (req, res) => {
+  if (req.session.user) {
+    res.send({ status: "success", payload: req.session.user });
+  } else {
+    res.send({ status: "success", payload: null });
+  }
 });
 
 export { routerSessions };

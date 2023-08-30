@@ -3,6 +3,7 @@ import GitHubStrategy from "passport-github2";
 import local from "passport-local";
 import { userManager } from "../dao/managers/mongoDBManagers/user.manager.js";
 import { createHash, isValidPassword } from "../utils/hashPassword.js";
+import { cartManagerDB } from "../dao/managers/mongoDBManagers/cart.manager.js";
 
 const LocalStrategy = local.Strategy;
 const initializePassport = () => {
@@ -20,11 +21,15 @@ const initializePassport = () => {
           return done(null, false);
         }
 
+        // Creamos una carrito para el usuario
+        const cart = await cartManagerDB.addCart();
+
         const newUser = {
           first_name,
           last_name,
           age,
           email,
+          cart: cart._id,
           password: createHash(password),
         };
 

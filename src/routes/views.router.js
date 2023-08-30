@@ -3,6 +3,7 @@ import { cartManagerDB } from "../dao/managers/mongoDBManagers/cart.manager.js";
 import { productManagerDB } from "../dao/managers/mongoDBManagers/product.manager.js";
 import { userManager } from "../dao/managers/mongoDBManagers/user.manager.js";
 import { createHash, isValidPassword } from "../utils/hashPassword.js";
+import { generateToken, verifyToken } from "../utils/jwt.js";
 
 const routerViews = Router();
 
@@ -112,28 +113,15 @@ routerViews.post("/login", async (req, res) => {
   try {
     // Verificamos los datos ingresados
     const user = await userManager.getUserByEmail(email);
-  
-    if (!user || !isValidPassword(user, password)) return res.render("login", { error: "Usuario o contraseña incorrectos" });
 
-    const { first_name, last_name, age, email: emailUser } = user;
-    // Verificamos si el usuario es administrador le asignamos el rol de admin sino le asignamos el rol de user
-    if (email === "adminCoder@coder.com" || password === "adminCod3r123") {
-      req.session.user = {
-        first_name,
-        last_name,
-        age,
-        email: emailUser,
-        role: "admin",
-      };
-    } else {
-      req.session.user = {
-        first_name,
-        last_name,
-        age,
-        email: emailUser,
-        role: "user",
-      };
-    }
+    if (!user || !isValidPassword(user, password))
+      return res.render("login", { error: "Usuario o contraseña incorrectos" });
+
+    const { first_name, last_name, email: emailUser, role } = user;
+
+    const token = generateToken({ first_name, last_name, email: emailUser, role });
+
+    res.cookie("token", token, { maxAge: 3600000, httpOnly: true });
 
     // Redireccionamos al perfil del usuario
     return res.redirect("/profile");
@@ -184,7 +172,7 @@ routerViews.post("/register", async (req, res) => {
 // Vista de perfil
 routerViews.get("/profile", async (req, res) => {
   try {
-    const { user } = req.session;
+    const { user } = verifyToken(req.cookies.token);
 
     // Si no hay usuario logueado redireccionamos al login
     if (!user) return res.redirect("/login");
@@ -223,7 +211,6 @@ routerViews.get("/resetpassword", async (req, res) => {
 routerViews.post("/resetpassword", async (req, res) => {
   const { email, password } = req.body;
   try {
-    
     const user = await userManager.getUserByEmail(email);
     if (!user) return res.render("resetPassword", { error: `El usuario con el mail ${email} no existe` });
 
@@ -231,11 +218,9 @@ routerViews.post("/resetpassword", async (req, res) => {
     await userManager.changePassword(email, createHash(password));
 
     res.redirect("/login");
-    
   } catch (error) {
     console.log(error);
   }
 });
 
 export { routerViews };
-

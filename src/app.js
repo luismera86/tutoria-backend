@@ -56,6 +56,9 @@ app.use("/api/products", routerProducts);
 app.use("/api/carts", routerCarts);
 app.use("/api/sessions", routerSessions);
 app.use("/", routerViews);
+app.get("*", (req, res) => {
+  res.status(404).send({ error: "Página no encontrada" });
+});
 
 // Iniciamos el servidor en el puerto asignado en la constante PORT
 
