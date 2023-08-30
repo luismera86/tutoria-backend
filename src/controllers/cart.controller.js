@@ -1,9 +1,8 @@
 import * as cartServices from "../services/cart.services";
 
-
 const getAllCarts = async (req, res) => {
   try {
-    const carts = await cartServices.getAllCartsService() ;
+    const carts = await cartServices.getAllCarts();
     res.status(200).json(carts);
   } catch (error) {
     console.log(error);
@@ -14,7 +13,7 @@ const getCartById = async (req, res) => {
   const { cid } = req.params;
   try {
     // Buscamos si existe el carrito y el producto en la base de datos
-    const cart = await cartServices.
+    const cart = await cartServices.getCartById(cid);
     if (!cart) return res.status(404).json({ msg: "Carrito no encontrado" });
 
     res.status(200).json(cart);
@@ -39,6 +38,7 @@ const addProductToCart = async (req, res) => {
     const cart = await cartServices.getCartById(cid);
     if (!cart) return res.status(404).json({ msg: "Carrito no encontrado" });
 
+    //! Corregir cuando se creen los servicios de products
     const product = await productManagerDB.getProductById(pid);
     if (!product) return res.status(404).json({ msg: "Producto no encontrado" });
 
@@ -57,7 +57,7 @@ const deleteCart = async (req, res) => {
     const cart = await cartServices.getCartById(cid);
     if (!cart) return res.status(404).json({ msg: "Carrito no encontrado" });
 
-    await cartServices.deleteCart(id);
+    await cartServices.deleteCart(cid);
 
     res.status(200).json({ msg: "Carrito eliminado" });
   } catch (error) {
@@ -72,7 +72,7 @@ const deleteProductFromCart = async (req, res) => {
     const cart = await cartServices.getCartById(cid);
     if (!cart) return res.status(404).json({ msg: "Carrito no encontrado" });
 
-    const product = await productManagerDB.getProductById(pid);
+    //! const product = await productManagerDB.getProductById(pid);
     if (!product) return res.status(404).json({ msg: "Producto no encontrado" });
 
     // Buscamos si existe el producto en el carrito
@@ -122,7 +122,7 @@ const updateProductQuantityFromCart = async (req, res) => {
     const cart = await cartServices.getCartById(cid);
     if (!cart) return res.status(404).json({ msg: "Carrito no encontrado" });
 
-    const product = await productManagerDB.getProductById(pid);
+    //!const product = await productManagerDB.getProductById(pid);
     if (!product) return res.status(404).json({ msg: "Producto no encontrado" });
 
     // Buscamos si existe el producto en el carrito

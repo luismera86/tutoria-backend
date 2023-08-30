@@ -1,16 +1,19 @@
 import { cartModel } from "../dao/models/cart.model.js";
 
-const getAllCartsService = async () => {
+// Llamamos todos los Carts
+const getAllCarts = async () => {
   const carts = await cartModel.find();
   return carts;
 };
 
-const getCartByIdService = async (id) => {
-  const cart = await cartModel.findOne({ _id: id }).populate("products.product");
+// Llamamos un Cart por su id
+const getCartById = async (cid) => {
+  const cart = await cartModel.findOne({ _id: cid }).populate("products.product");
   return cart;
 };
 
-const addCartService = async () => {
+// Agregamos un Cart a nuestra base de datos
+const addCart = async () => {
   const newCart = {
     products: [],
   };
@@ -18,7 +21,8 @@ const addCartService = async () => {
   return cart;
 };
 
-const addProductToCartService = async (cid, pid) => {
+// Agregamos un product al array products de Cart
+const addProductToCart = async (cid, pid) => {
   const cartUpdate = await cartModel.findOneAndUpdate(
     { _id: cid, "products.product": pid },
     { $inc: { "products.$.quantity": 1 } },
@@ -37,50 +41,57 @@ const addProductToCartService = async (cid, pid) => {
   return cartUpdate;
 };
 
-const deleteCartService = async (cid) => {
+// Eliminamos un Cart
+const deleteCart = async (cid) => {
   const cartDelete = await cartModel.deleteOne({ _id: cid });
 
   return cartDelete;
 };
 
-const deleteAllProductsFromCartService = async (cid) => {
-  const cart = await getCartByIdService(cid);
+// Eliminamos todos los productos de un Cart
+const removeAllProductsFromCart = async (cid) => {
+  const cart = await this.getCartById(cid);
 
   const cartUpdate = await cart.updateOne({ $set: { products: [] } });
 
   return cartUpdate;
 };
 
-const updateProductsFromCartService = async (cid, products) => {
-  const cart = await getCartByIdService(cid);
+// Actualizamos el array products de Cart
+const updateCart = async (cid, arrayProducts) => {
+  await this.removeAllProductsFromCart(cid);
 
-  const cartUpdate = await cart.updateOne({ $set: { products: products } });
+  arrayProducts.forEach(async (product) => {
+    await this.addProductToCart(cid, product._id);
+  });
 
-  return cartUpdate;
+  return await this.getCartById(cid);
 };
 
-const updateProductQuantityFromCartService = async (cid, pid, quantity) => {
-  const cart = await getCartByIdService(cid);
-
-  const cartUpdate = await cart.updateOne(
+// Actualizamos la cantidad del producto en el Cart
+const updateProductQuantity = async (cid, pid, quantity) => {
+  const cartUpdate = await cartModel.findOneAndUpdate(
     { _id: cid, "products.product": pid },
-    { $set: { "products.$.quantity": quantity } }
+    { $set: { "products.$.quantity": quantity } },
+    { new: true }
   );
 
   return cartUpdate;
 };
 
-const removeProductFromCartService = async (cid, pid) => {
+// Quitamos un producto del Cart si llega a 0 lo quitamos del cart
+const removeProductFromCart = async (cid, pid) => {
   const cart = await this.getCartById(cid);
 
   const product = await productManagerDB.getProductById(pid);
 
   const cartUpdate = await cartModel.findOneAndUpdate(
-    { _id: cart._id, "products.product": product._id },
+    { _id: cartModel._id, "products.product": product._id },
     { $inc: { "products.$.quantity": -1 } },
     { new: true }
   );
 
+  // Si la cantidad del producto es 0 lo quitamos del cart
   if (cartUpdate) {
     const product = cartUpdate.products.find((prod) => prod.product == pid);
 
@@ -93,13 +104,13 @@ const removeProductFromCartService = async (cid, pid) => {
 };
 
 export {
-  getAllCartsService,
-  getCartByIdService,
-  addCartService,
-  addProductToCartService,
-  deleteCartService,
-  deleteAllProductsFromCartService,
-  updateProductsFromCartService,
-  updateProductQuantityFromCartService,
-  removeProductFromCartService,
+  getAllCarts,
+  getCartById,
+  addCart,
+  addProductToCart,
+  deleteCart,
+  removeAllProductsFromCart,
+  updateCart,
+  updateProductQuantity,
+  removeProductFromCart,
 };
