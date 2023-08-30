@@ -1,2 +1,2 @@
-## Desafio 10 - Segunda práctica integradora
-![Imgur](https://imgur.com/1g6r8Iq.png)
+## Desafio 11 - Reestructura de nuestro servidor
+![Imgur](https://imgur.com/fUhrfTU.png)
