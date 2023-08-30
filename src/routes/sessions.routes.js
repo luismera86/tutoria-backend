@@ -1,41 +1,16 @@
 import { Router } from "express";
 import passport from "passport";
+import { current, github, login, logout } from "../controllers/session.controllers.js";
 
 const routerSessions = Router();
 
-routerSessions.post("/login", passport.authenticate("login", { failureRedirect: "faillogin" }), async (req, res) => {
-  if (!req.user) return res.status(400).send({ status: "error", message: "Error credenciales inválidas" });
-  const { first_name, last_name, age, email, role } = req.user;
-
-  req.session.user = {
-    first_name,
-    last_name,
-    age,
-    email,
-    role,
-  };
-
-  res.send({ status: "success", payload: req.user });
-});
+routerSessions.post("/login", passport.authenticate("login", { failureRedirect: "faillogin" }), login);
 
 routerSessions.get("/faillogin", (req, res) => {
   res.send({ error: "Error credenciales inválidas" });
 });
 
-routerSessions.post("/logout", async (req, res) => {
-  try {
-    // Destruimos la sesión
-    req.session.destroy((err) => {
-      if (err) {
-        return res.status(500).json({ error: "Error al cerrar sesión" });
-      }
-      // Devolvemos el mensaje de sesión cerrada
-      res.json({ message: "Sesión cerrada" });
-    });
-  } catch (error) {
-    console.log(error);
-  }
-});
+routerSessions.post("/logout", logout);
 
 routerSessions.post(
   "/register",
@@ -49,20 +24,10 @@ routerSessions.get("/failregister", (req, res) => {
   res.status(401).send({ status: "error", message: "Error al registrar el usuario" });
 });
 
-routerSessions.get("/github", passport.authenticate("github", { scope: ["user:email"] }), async (req, res) => { });
+routerSessions.get("/github", passport.authenticate("github", { scope: ["user:email"] }), async (req, res) => {});
 
-routerSessions.get("/githubcallback", passport.authenticate("github", { failureRedirect: "login" }), async (req, res) => {
-  req.session.user = req.user;
-  res.redirect("/profile");
-});
+routerSessions.get("/githubcallback", passport.authenticate("github", { failureRedirect: "login" }), github);
 
-routerSessions.get("/current", async (req, res) => {
-  if (req.session.user) {
-    res.send({ status: "success", payload: req.session.user });
-  } else {
-    res.send({ status: "success", payload: null });
-  }
-});
+routerSessions.get("/current", current);
 
 export { routerSessions };
-
