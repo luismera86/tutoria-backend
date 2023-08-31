@@ -1,3 +1,5 @@
+import { productModel } from "../dao/models/product.model.js";
+
 // Llamamos todos los productos
 const getAllProducts = async (query, options) => {
   const products = await productModel.paginate(query, options);

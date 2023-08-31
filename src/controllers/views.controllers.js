@@ -1,6 +1,8 @@
 import * as productServices from "../services/product.services.js";
 import * as cartServices from "../services/cart.services.js";
 import * as userServices from "../services/user.services.js";
+import { isValidPassword } from "../utils/hashPassword.js";
+import { generateToken, verifyToken } from "../utils/jwt.js";
 
 const home = async (req, res) => {
   try {

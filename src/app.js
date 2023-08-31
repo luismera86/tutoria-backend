@@ -73,7 +73,8 @@ const socketServer = new Server(httpServer);
 socketServer.on("connection", async (socket) => {
   console.log("Cliente conectado");
   const products = await productServices.getAllProducts();
-  socket.emit("products", products);
+
+  socket.emit("products", products.docs);
 
   const messages = await messageServices.getMessages();
   socket.emit("messages", messages);
@@ -81,13 +82,13 @@ socketServer.on("connection", async (socket) => {
   socket.on("new-product", async (data) => {
     await productServices.addProduct(data);
     const products = await productServices.getAllProducts();
-    socket.emit("products", products);
+    socket.emit("products", products.docs);
   });
 
   socket.on("delete", async (id) => {
     await productServices.deleteProduct(id);
     const products = await productServices.getAllProducts();
-    socket.emit("products", products);
+    socket.emit("products", products.docs);
   });
 
   socket.on("chatMessage", async (data) => {
