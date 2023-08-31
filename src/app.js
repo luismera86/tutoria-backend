@@ -4,6 +4,7 @@ import handlebars from "express-handlebars";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import passport from "passport";
+import nodemailer from "nodemailer";
 
 import { mongoDBConnection } from "./config/mongoDB.config.js";
 import { routerCarts } from "./routes/carts.routes.js";
@@ -60,7 +61,24 @@ app.get("*", (req, res) => {
   res.status(404).send({ error: "Página no encontrada" });
 });
 
-// Iniciamos el servidor en el puerto asignado en la constante PORT
+// const transporter = nodemailer.createTransport({
+//   service: "gmail",
+//   port: 587,
+//   auth: {
+//     user: "testcoderbackend@gmail.com",
+//     pass: "aqkwtsgljqfdxcno"
+//   },
+// });
+
+// app.get("/mail/test", async (req, res) => {
+//   console.log("Enviando mail")
+//   let result = await transporter.sendMail({
+//     from: "Servidor Node.js",
+//     to: "luismeradev@gmail.com",
+//     subject: "Mensaje de prueba",
+//     text: "Hola mundo",
+//   });
+// });
 
 const httpServer = app.listen(PORT, () => {
   console.log(`Servidor conectado en el puerto ${PORT}`);

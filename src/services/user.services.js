@@ -1,23 +1,22 @@
-
-import { userModel } from "../dao/models/user.model.js";
+import * as userDao from "../dao/mongo/user.dao.js";
 
 const createUser = async (user) => {
-  const newUser = await userModel.create(user);
+  const newUser = await userDao.createUser(user);
   return newUser;
-}
+};
 
 const getUserByEmail = async (email) => {
-  const user = await userModel.findOne({ email: email });
+  const user = await userDao.getUserByEmail(email);
   return user;
-}
+};
 
 const getUserById = async (id) => {
-  const user = await userModel.findById(id);
+  const user = await userDao.getUserById(id);
   return user;
-}
+};
 
 const changePassword = async (email, newPassword) => {
-  await userModel.findOneAndUpdate({ email: email }, { password: newPassword });
-}
+  await userDao.changePassword(email, newPassword);
+};
 
-export { createUser, getUserByEmail, getUserById, changePassword}
+export { createUser, getUserByEmail, getUserById, changePassword };

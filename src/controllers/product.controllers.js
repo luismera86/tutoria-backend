@@ -12,7 +12,7 @@ const getAllProducts = async (req, res) => {
       },
       lean: true,
     };
-
+    // TODO Llevar está lógica a los services y utilizar un operador ternario para definir el query de status o category
     if (status != undefined) {
       const resProducts = await productServices.getAllProducts({ status: status }, options);
       return res.json({ resProducts });

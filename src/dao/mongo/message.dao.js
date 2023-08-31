@@ -1,13 +1,13 @@
-import * as messageDao from '../dao/mongo/message.dao.js';
+import { messageModel } from "../models/message.model.js";
 
 const getMessages = async () => {
-  const messages = await messageDao.find();
+  const messages = await messageModel.find();
 
   return messages;
 };
 
 const saveMessage = async (message) => {
-  const newMessage = await messageDao.create(message);
+  const newMessage = await messageModel.create(message);
 
   return newMessage;
 };
