@@ -1,8 +1,21 @@
 import * as productDao from "../dao/mongo/product.dao.js";
 
 // Llamamos todos los productos
-const getAllProducts = async (query, options) => {
-  const products = await productDao.getAllProducts(query, options);
+const getAllProducts = async (query) => {
+  const { limit, page, sort, category, status } = query;
+
+  const options = {
+    limit: limit || 10,
+    page: page || 1,
+    sort: {
+      price: sort === "asc" ? 1 : -1,
+    },
+    lean: true,
+  };
+
+  const queryFind = status || category ? { status: status } || { category: category } : {};
+
+  const products = await productDao.getAllProducts(queryFind, options);
   return products;
 };
 

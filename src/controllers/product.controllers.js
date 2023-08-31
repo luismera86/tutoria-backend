@@ -1,30 +1,9 @@
 import * as productServices from "../services/product.services.js";
 
 const getAllProducts = async (req, res) => {
-  const { limit, page, sort, category, status } = req.query;
-
   try {
-    const options = {
-      limit: limit || 10,
-      page: page || 1,
-      sort: {
-        price: sort === "asc" ? 1 : -1,
-      },
-      lean: true,
-    };
-    // TODO Llevar está lógica a los services y utilizar un operador ternario para definir el query de status o category
-    if (status != undefined) {
-      const resProducts = await productServices.getAllProducts({ status: status }, options);
-      return res.json({ resProducts });
-    }
+    const resProducts = await productServices.getAllProducts(req.query);
 
-    if (category != undefined) {
-      const resProducts = await productServices.getAllProducts({ category: category }, options);
-      return res.json({ resProducts });
-    }
-
-    const resProducts = await productServices.getAllProducts({}, options);
-    console.log(resProducts);
     const { totalPages, docs, hasPrevPage, hasNextPage, prevPage, nextPage } = resProducts;
     res.status(200).json({
       status: "success",
