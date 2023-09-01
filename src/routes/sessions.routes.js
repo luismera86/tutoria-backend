@@ -1,6 +1,7 @@
 import { Router } from "express";
 import passport from "passport";
 import { current, github, login, logout } from "../controllers/session.controllers.js";
+import { isLogin } from "../middlewares/checkUser.js";
 
 const routerSessions = Router();
 
@@ -28,6 +29,6 @@ routerSessions.get("/github", passport.authenticate("github", { scope: ["user:em
 
 routerSessions.get("/githubcallback", passport.authenticate("github", { failureRedirect: "login" }), github);
 
-routerSessions.get("/current", current);
+routerSessions.get("/current", isLogin, current);
 
 export { routerSessions };

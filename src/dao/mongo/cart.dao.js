@@ -103,6 +103,36 @@ const removeProductFromCart = async (cid, pid) => {
   }
 };
 
+const purchaseCart = async (cid) => {
+  const cart = await getCartById(cid);
+  const productsInStock = cart.products.map(async (product) => {
+    const productDB = await productManagerDB.getProductById(product.product);
+    let products = [];
+    if (productDB.stock <= product.quantity) {
+      products.push(productDB);
+    }
+    return products;
+  });
+
+  const productsOutOfStock = cart.products.map(async (product) => {
+    const productDB = await productManagerDB.getProductById(product.product);
+    let products = [];
+    if (productDB.stock > product.quantity) {
+      products.push(productDB);
+    }
+    return products;
+  });
+
+  // Si todos los productos estan en stock se realiza la compra y se vacia el carrito
+  if (productsOutOfStock.length === 0) return await cart.updateOne({ $set: { products: [] } });
+
+  // Si alguno de los productos no esta en stock se actualiza el carrito con los productos que si estan en stock
+  if (productsOutOfStock > 0) return await cart.updateOne({ $set: { products: productsOutOfStock } });
+  
+  //? Revisar si esta bien el return
+  return cart;
+};
+
 export {
   getAllCarts,
   getCartById,
@@ -113,4 +143,5 @@ export {
   updateCart,
   updateProductQuantity,
   removeProductFromCart,
+  purchaseCart,
 };

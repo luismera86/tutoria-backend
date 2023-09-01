@@ -50,6 +50,22 @@ const addProductToCart = async (req, res) => {
   }
 };
 
+const addProductInUserCart = async (req, res) => {
+  const { pid } = req.params;
+  const { user } = req.session;
+  try {
+
+    const product = await productServices.getProductById(pid);
+    if (!product) return res.status(404).json({ msg: "Producto no encontrado" });
+
+    await cartServices.addProductToCart(user.cart, pid);
+
+    res.status(200).json({ msg: "Producto agregado al carrito" });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const deleteCart = async (req, res) => {
   const { cid } = req.params;
   try {
@@ -147,4 +163,5 @@ export {
   deleteAllProductsFromCart,
   updateProductsFromCart,
   updateProductQuantityFromCart,
+  addProductInUserCart
 };

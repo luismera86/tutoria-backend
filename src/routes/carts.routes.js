@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   addCart,
+  addProductInUserCart,
   addProductToCart,
   deleteAllProductsFromCart,
   deleteCart,
@@ -10,7 +11,7 @@ import {
   updateProductQuantityFromCart,
   updateProductsFromCart,
 } from "../controllers/cart.controllers.js";
-import { isAuthorize } from "../middlewares/checkUser.js";
+import { isAuthorize, isLogin, isUserAuthorized } from "../middlewares/checkUser.js";
 
 const routerCarts = Router();
 
@@ -24,7 +25,12 @@ routerCarts.get("/:cid", getCartById);
 routerCarts.post("/", isAuthorize, addCart);
 
 // Agregamos un producto a un carrito
-routerCarts.post("/:cid/products/:pid", addProductToCart);
+routerCarts.post("/:cid/products/:pid", isLogin, isUserAuthorized, addProductToCart);
+
+routerCarts.post("/products/:pid", isLogin, isUserAuthorized, addProductInUserCart);
+
+// Proceso de compra de un carrito
+routerCarts.post("/:cid/purchase", );
 
 // Eliminamos un carrito
 routerCarts.delete("/:cid", isAuthorize, deleteCart);

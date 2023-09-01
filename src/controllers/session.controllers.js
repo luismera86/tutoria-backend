@@ -29,11 +29,7 @@ const logout = async (req, res) => {
 
 const current = async (req, res) => {
   try {
-    if (req.session.user) {
-      res.send({ status: "success", payload: req.session.user });
-    } else {
-      res.send({ status: "success", payload: null });
-    }
+    res.send({ status: "success", payload: req.session.user });
   } catch (error) {
     console.log(error);
   }

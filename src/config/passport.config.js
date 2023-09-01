@@ -11,12 +11,11 @@ const initializePassport = () => {
     "register",
 
     new LocalStrategy({ passReqToCallback: true, usernameField: "email" }, async (req, username, password, done) => {
-      const { first_name, last_name, age, email } = req.body;
+      const { first_name, last_name, age, email, role } = req.body;
 
       try {
         let user = await userServices.getUserByEmail(username);
         if (user) {
-          console.log("El usuario ya existe");
           // null significa que no hay error y el false que no se pudo crear el usuario
           return done(null, false);
         }
@@ -31,6 +30,7 @@ const initializePassport = () => {
           email,
           cart: cart._id,
           password: createHash(password),
+          role
         };
 
         let result = await userServices.createUser(newUser);
