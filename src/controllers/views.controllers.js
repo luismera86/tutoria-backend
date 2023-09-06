@@ -1,6 +1,8 @@
 import * as productServices from "../services/product.services.js";
 import * as cartServices from "../services/cart.services.js";
 import * as userServices from "../services/user.services.js";
+import * as ticketService from "../services/ticket.services.js";
+import * as cartService from "../services/cart.services.js";
 import { isValidPassword } from "../utils/hashPassword.js";
 import { generateToken, verifyToken } from "../utils/jwt.js";
 
@@ -191,6 +193,33 @@ const resetPassword = async (req, res) => {
   }
 };
 
+const generateTicket = async (req, res) => {
+  try {
+    const user = req.user;
+    const cart = await cartService.getCartFromEmail(user.email);
+    const data = {
+      purchaser: user.email,
+      amount: cart.total,
+    };
+    const ticket = await ticketService.generateTicket(data);
+
+    // todo: redireccionar a la pagina de ticket en los views
+    res.status(201).json(ticket);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getTicketFromEmail = async (req, res) => {
+  try {
+    const user = req.user;
+    const ticket = await ticketService.getTicketFromEmail(user.email);
+    res.status(200).json(ticket);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export {
   home,
   realTimeProducts,
@@ -206,4 +235,6 @@ export {
   logoutUser,
   viewResetPassword,
   resetPassword,
+  generateTicket,
+  getTicketFromEmail,
 };

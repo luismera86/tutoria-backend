@@ -1,4 +1,5 @@
 import { cartModel } from "../models/cart.model.js";
+import * as productService from "../../services/product.services.js";
 
 // Llamamos todos los Carts
 const getAllCarts = async () => {
@@ -23,6 +24,7 @@ const addCart = async () => {
 
 // Agregamos un product al array products de Cart
 const addProductToCart = async (cid, pid) => {
+  const cart = await getCartById(cid);
   const cartUpdate = await cartModel.findOneAndUpdate(
     { _id: cid, "products.product": pid },
     { $inc: { "products.$.quantity": 1 } },
@@ -35,10 +37,13 @@ const addProductToCart = async (cid, pid) => {
       { $push: { products: { product: pid, quantity: 1 } } },
       { new: true }
     );
+    const total = await sumTotal(cid);
+    await cartModel.findOneAndUpdate({ _id: cid }, { $set: { total } });
     return newCart;
   }
-
-  return cartUpdate;
+  const total = await sumTotal(cid);
+  await cartModel.findOneAndUpdate({ _id: cid }, { $set: { total } });
+  return cart;
 };
 
 // Eliminamos un Cart
@@ -83,7 +88,7 @@ const updateProductQuantity = async (cid, pid, quantity) => {
 const removeProductFromCart = async (cid, pid) => {
   const cart = await getCartById(cid);
 
-  const product = await productManagerDB.getProductById(pid);
+  const product = await productService.getProductById(pid);
 
   const cartUpdate = await cartModel.findOneAndUpdate(
     { _id: cartModel._id, "products.product": product._id },
@@ -106,20 +111,22 @@ const removeProductFromCart = async (cid, pid) => {
 const purchaseCart = async (cid) => {
   const cart = await getCartById(cid);
   const productsInStock = cart.products.map(async (product) => {
-    const productDB = await productManagerDB.getProductById(product.product);
+    const productDB = await productService.getProductById(product.product);
     let products = [];
     if (productDB.stock <= product.quantity) {
       products.push(productDB);
     }
+    sumTotal(cid);
     return products;
   });
 
   const productsOutOfStock = cart.products.map(async (product) => {
-    const productDB = await productManagerDB.getProductById(product.product);
+    const productDB = await productService.getProductById(product.product);
     let products = [];
     if (productDB.stock > product.quantity) {
       products.push(productDB);
     }
+    sumTotal(cid);
     return products;
   });
 
@@ -128,9 +135,23 @@ const purchaseCart = async (cid) => {
 
   // Si alguno de los productos no esta en stock se actualiza el carrito con los productos que si estan en stock
   if (productsOutOfStock > 0) return await cart.updateOne({ $set: { products: productsOutOfStock } });
-  
+
   //? Revisar si esta bien el return
   return cart;
+};
+
+// Sumamos el total de los productos del Cart
+const sumTotal = async (cid) => {
+  const cart = await getCartById(cid);
+
+  const total = await cart.products.reduce(async (acc, product) => {
+    const productDB = await productService.getProductById(product.product);
+    return acc + productDB.price * product.quantity;
+  }, 0);
+
+  console.log(total);
+
+  return total;
 };
 
 export {
