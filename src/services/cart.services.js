@@ -75,4 +75,5 @@ export {
   updateCart,
   updateProductQuantity,
   removeProductFromCart,
+  purchaseCart,
 };

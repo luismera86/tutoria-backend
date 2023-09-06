@@ -8,6 +8,7 @@ import {
   deleteProductFromCart,
   getAllCarts,
   getCartById,
+  purchaseCart,
   updateProductQuantityFromCart,
   updateProductsFromCart,
 } from "../controllers/cart.controllers.js";
@@ -30,7 +31,7 @@ routerCarts.post("/:cid/products/:pid", isLogin, isUserAuthorized, addProductToC
 routerCarts.post("/products/:pid", isLogin, isUserAuthorized, addProductInUserCart);
 
 // Proceso de compra de un carrito
-routerCarts.post("/:cid/purchase", );
+routerCarts.post("/:cid/purchase", isLogin, purchaseCart);
 
 // Eliminamos un carrito
 routerCarts.delete("/:cid", isAuthorize, deleteCart);

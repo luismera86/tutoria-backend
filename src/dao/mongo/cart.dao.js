@@ -110,34 +110,27 @@ const removeProductFromCart = async (cid, pid) => {
 
 const purchaseCart = async (cid) => {
   const cart = await getCartById(cid);
-  const productsInStock = cart.products.map(async (product) => {
-    const productDB = await productService.getProductById(product.product);
-    let products = [];
-    if (productDB.stock <= product.quantity) {
-      products.push(productDB);
-    }
-    sumTotal(cid);
-    return products;
-  });
 
   const productsOutOfStock = cart.products.map(async (product) => {
     const productDB = await productService.getProductById(product.product);
-    let products = [];
-    if (productDB.stock > product.quantity) {
-      products.push(productDB);
+    
+    if (product.product.stock > product.quantity) {
+      await productService.updateProduct(product.product._id, { stock: productDB.stock - product.quantity });
+      return product;
     }
-    sumTotal(cid);
-    return products;
+    
   });
 
+
   // Si todos los productos estan en stock se realiza la compra y se vacia el carrito
-  if (productsOutOfStock.length === 0) return await cart.updateOne({ $set: { products: [] } });
+  if (cart.products === 0) return await cart.updateOne({ $set: { products: [] } });
 
   // Si alguno de los productos no esta en stock se actualiza el carrito con los productos que si estan en stock
-  if (productsOutOfStock > 0) return await cart.updateOne({ $set: { products: productsOutOfStock } });
+  if (cart.products > 0) return await cart.updateOne({ $set: { products: productsOutOfStock } });
 
-  //? Revisar si esta bien el return
-  return cart;
+  const total = await sumTotal(cid);
+  await cartModel.findOneAndUpdate({ _id: cid }, { $set: { total } });
+  return await cartModel.findOne({ _id: cid });
 };
 
 // Sumamos el total de los productos del Cart
@@ -148,8 +141,6 @@ const sumTotal = async (cid) => {
     const productDB = await productService.getProductById(product.product);
     return acc + productDB.price * product.quantity;
   }, 0);
-
-  console.log(total);
 
   return total;
 };

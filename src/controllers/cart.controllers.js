@@ -153,6 +153,23 @@ const updateProductQuantityFromCart = async (req, res) => {
   }
 };
 
+const purchaseCart = async (req, res) => {
+  const { cid } = req.params;
+  try {
+    // Buscamos si existe el carrito y el producto en la base de datos
+    const cart = await cartServices.getCartById(cid);
+    if (!cart) return res.status(404).json({ msg: "Carrito no encontrado" });
+
+    const response = await cartServices.purchaseCart(cid);
+    console.log(response)
+
+    res.status(200).json({ msg: "Compra realizada" });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
 export {
   getAllCarts,
   getCartById,
@@ -163,5 +180,6 @@ export {
   deleteAllProductsFromCart,
   updateProductsFromCart,
   updateProductQuantityFromCart,
-  addProductInUserCart
+  addProductInUserCart,
+  purchaseCart
 };
