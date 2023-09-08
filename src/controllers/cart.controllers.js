@@ -42,9 +42,9 @@ const addProductToCart = async (req, res) => {
     const product = await productServices.getProductById(pid);
     if (!product) return res.status(404).json({ msg: "Producto no encontrado" });
 
-    await cartServices.addProductToCart(cid, pid);
+    const response = await cartServices.addProductToCart(cid, pid);
 
-    res.status(200).json({ msg: "Producto agregado al carrito" });
+    res.status(200).json({ msg: "Producto agregado al carrito", products: response.products });
   } catch (error) {
     console.log(error);
   }
@@ -54,13 +54,12 @@ const addProductInUserCart = async (req, res) => {
   const { pid } = req.params;
   const { user } = req.session;
   try {
-
     const product = await productServices.getProductById(pid);
     if (!product) return res.status(404).json({ msg: "Producto no encontrado" });
 
-    await cartServices.addProductToCart(user.cart, pid);
+    const response = await cartServices.addProductToCart(user.cart, pid);
 
-    res.status(200).json({ msg: "Producto agregado al carrito" });
+    res.status(200).json({ msg: "Producto agregado al carrito", products: response.products });
   } catch (error) {
     console.log(error);
   }
@@ -123,8 +122,8 @@ const updateProductsFromCart = async (req, res) => {
   const { products } = req.body;
 
   try {
-    await cartServices.updateCart(cid, products);
-    res.status(200).json({ msg: "Carrito actualizado" });
+    const response = await cartServices.updateCart(cid, products);
+    res.status(200).json({ msg: "Carrito actualizado", response });
   } catch (error) {
     console.log(error);
   }
@@ -161,14 +160,12 @@ const purchaseCart = async (req, res) => {
     if (!cart) return res.status(404).json({ msg: "Carrito no encontrado" });
 
     const response = await cartServices.purchaseCart(cid);
-    console.log(response)
-
-    res.status(200).json({ msg: "Compra realizada" });
+    
+    res.status(200).json({ msg: "Compra realizada", response });
   } catch (error) {
     console.log(error);
   }
 };
-
 
 export {
   getAllCarts,
@@ -181,5 +178,5 @@ export {
   updateProductsFromCart,
   updateProductQuantityFromCart,
   addProductInUserCart,
-  purchaseCart
+  purchaseCart,
 };

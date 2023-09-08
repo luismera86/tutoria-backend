@@ -113,17 +113,20 @@ const purchaseCart = async (cid) => {
 
   const productsOutOfStock = cart.products.map(async (product) => {
     const productDB = await productService.getProductById(product.product);
-    
+
     if (product.product.stock > product.quantity) {
       await productService.updateProduct(product.product._id, { stock: productDB.stock - product.quantity });
       return product;
     }
-    
   });
 
-
   // Si todos los productos estan en stock se realiza la compra y se vacia el carrito
-  if (cart.products === 0) return await cart.updateOne({ $set: { products: [] } });
+  if (cart.products === 0) {
+    const total = await sumTotal(cid);
+    await cart.updateOne({ $set: { products: [] } });
+    await cartModel.findOneAndUpdate({ _id: cid }, { $set: { total } });
+    return await cartModel.findOne({ _id: cid });
+  }
 
   // Si alguno de los productos no esta en stock se actualiza el carrito con los productos que si estan en stock
   if (cart.products > 0) return await cart.updateOne({ $set: { products: productsOutOfStock } });
