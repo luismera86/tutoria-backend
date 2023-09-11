@@ -61,24 +61,6 @@ app.get("*", (req, res) => {
   res.status(404).send({ error: "Página no encontrada" });
 });
 
-// const transporter = nodemailer.createTransport({
-//   service: "gmail",
-//   port: 587,
-//   auth: {
-//     user: "testcoderbackend@gmail.com",
-//     pass: "aqkwtsgljqfdxcno"
-//   },
-// });
-
-// app.get("/mail/test", async (req, res) => {
-//   console.log("Enviando mail")
-//   let result = await transporter.sendMail({
-//     from: "Servidor Node.js",
-//     to: "luismeradev@gmail.com",
-//     subject: "Mensaje de prueba",
-//     text: "Hola mundo",
-//   });
-// });
 
 const httpServer = app.listen(PORT, () => {
   console.log(`Servidor conectado en el puerto ${PORT}`);

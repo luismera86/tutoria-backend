@@ -1,6 +1,7 @@
 import { cartModel } from "../models/cart.model.js";
 import * as productService from "../../services/product.services.js";
 import * as ticketService from "../../services/ticket.services.js";
+import { sendTicketMail } from "../../utils/sendTicketMail.js";
 
 // Llamamos todos los Carts
 const getAllCarts = async () => {
@@ -165,6 +166,9 @@ const purchaseCart = async (cid, user) => {
 
   // Actualizar el total del carrito 
   await sumTotal(cid);
+
+  // Enviamos por mail el ticket de compra al usuario
+  sendTicketMail(ticket);
 
   return ticket;
 
