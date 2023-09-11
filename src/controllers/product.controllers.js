@@ -1,4 +1,6 @@
 import * as productServices from "../services/product.services.js";
+import { EErrors, customError } from "../utils/customErro.js";
+import { generateProducts } from "../utils/generateProducts.js";
 
 const getAllProducts = async (req, res) => {
   try {
@@ -71,4 +73,16 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-export { addProduct, updateProduct, deleteProduct, getAllProducts, getProductById };
+const generateMockingProducts = async (req, res) => {
+  try {
+    const products = generateProducts();
+    if(products.length > 1) customError({ name: "Error mock", message: "Error al generar productos de mock", cause: "Error en el servidor", code: EErrors.PRODUCT_NOT_FOUND})
+    res.status(200).json(products);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: "Error en el servidor" });
+  }
+};
+
+export { addProduct, deleteProduct, generateMockingProducts, getAllProducts, getProductById, updateProduct };
+
