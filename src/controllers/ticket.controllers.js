@@ -11,7 +11,6 @@ const generateTicket = async (req, res) => {
     };
     const ticket = await ticketService.generateTicket(data);
 
-    // todo: redireccionar a la pagina de ticket en los views
     res.status(201).json(ticket);
   } catch (error) {
     console.log(error);

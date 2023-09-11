@@ -60,8 +60,8 @@ const removeProductFromCart = async (cid, pid) => {
   return cartUpdate;
 };
 
-const purchaseCart = async (cid) => {
-  const cart = await cartDao.purchaseCart(cid);
+const purchaseCart = async (cid, user) => {
+  const cart = await cartDao.purchaseCart(cid, user);
   return cart;
 };
 

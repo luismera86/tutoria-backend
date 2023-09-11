@@ -154,12 +154,13 @@ const updateProductQuantityFromCart = async (req, res) => {
 
 const purchaseCart = async (req, res) => {
   const { cid } = req.params;
+  const user = req.session.user;
   try {
     // Buscamos si existe el carrito y el producto en la base de datos
     const cart = await cartServices.getCartById(cid);
     if (!cart) return res.status(404).json({ msg: "Carrito no encontrado" });
 
-    const response = await cartServices.purchaseCart(cid);
+    const response = await cartServices.purchaseCart(cid, user);
     
     res.status(200).json({ msg: "Compra realizada", response });
   } catch (error) {
