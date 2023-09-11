@@ -1,5 +1,5 @@
 import { userDTO } from "../dto/user.dto.js";
-
+import { logger } from "../utils/logger.js";
 const login = async (req, res) => {
   try {
     if (!req.user) return res.status(400).send({ status: "error", message: "Error credenciales inválidas" });
@@ -8,7 +8,8 @@ const login = async (req, res) => {
 
     res.send({ status: "success", payload: req.session.user });
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -23,7 +24,8 @@ const logout = async (req, res) => {
       res.json({ message: "Sesión cerrada" });
     });
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -31,7 +33,8 @@ const current = async (req, res) => {
   try {
     res.send({ status: "success", payload: req.session.user });
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -40,7 +43,8 @@ const github = async (req, res) => {
     req.session.user = userDTO(req.user);
     res.redirect("/profile");
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 

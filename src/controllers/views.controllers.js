@@ -5,12 +5,14 @@ import * as ticketService from "../services/ticket.services.js";
 import * as cartService from "../services/cart.services.js";
 import { isValidPassword } from "../utils/hashPassword.js";
 import { generateToken, verifyToken } from "../utils/jwt.js";
+import { logger } from "../utils/logger.js";
 
 const home = async (req, res) => {
   try {
     res.render("login");
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -18,7 +20,8 @@ const realTimeProducts = async (req, res) => {
   try {
     res.render("realTimeProducts");
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -26,7 +29,8 @@ const chat = async (req, res) => {
   try {
     res.render("chat");
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -48,7 +52,8 @@ const products = async (req, res) => {
       nextLink: `http://localhost:8080/products?page=${nextPage}`,
     });
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -58,7 +63,8 @@ const productDetail = async (req, res) => {
     const product = await productServices.getProductById(pid);
     res.render("itemDetail", product);
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -70,7 +76,8 @@ const cartDetail = async (req, res) => {
 
     res.render("cart", { products: cart.products });
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -78,7 +85,8 @@ const viewLogin = async (req, res) => {
   try {
     res.render("login");
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -100,7 +108,8 @@ const loginUser = async (req, res) => {
     // Redireccionamos al perfil del usuario
     return res.redirect("/profile");
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -108,7 +117,8 @@ const viewRegister = async (req, res) => {
   try {
     res.render("register");
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -138,7 +148,8 @@ const registerUser = async (req, res) => {
     // Devolvemos el usuario creado
     return res.redirect("/login");
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -151,7 +162,8 @@ const viewProfile = async (req, res) => {
 
     res.render("profile", { user });
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -166,7 +178,8 @@ const logoutUser = async (req, res) => {
       res.redirect("/login");
     });
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -174,7 +187,8 @@ const viewResetPassword = async (req, res) => {
   try {
     res.render("resetPassword");
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -189,7 +203,8 @@ const resetPassword = async (req, res) => {
 
     res.redirect("/login");
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -206,7 +221,8 @@ const generateTicket = async (req, res) => {
     // todo: redireccionar a la pagina de ticket en los views
     res.status(201).json(ticket);
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -216,7 +232,8 @@ const getTicketFromEmail = async (req, res) => {
     const ticket = await ticketService.getTicketFromEmail(user.email);
     res.status(200).json(ticket);
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 

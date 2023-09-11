@@ -1,5 +1,6 @@
 import * as ticketService from "../services/ticket.services.js";
 import * as cartService from "../services/cart.services.js";
+import { logger } from "../utils/logger.js";
 
 const generateTicket = async (req, res) => {
   try {
@@ -13,7 +14,8 @@ const generateTicket = async (req, res) => {
 
     res.status(201).json(ticket);
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -23,7 +25,8 @@ const getTicketFromEmail = async (req, res) => {
     const ticket = await ticketService.getTicketFromEmail(user.email);
     res.status(200).json(ticket);
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 

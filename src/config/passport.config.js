@@ -4,6 +4,7 @@ import local from "passport-local";
 import { createHash, isValidPassword } from "../utils/hashPassword.js";
 import * as userServices from "../services/user.services.js";
 import * as cartServices from "../services/cart.services.js";
+import { logger } from "../utils/logger.js";
 
 const LocalStrategy = local.Strategy;
 const initializePassport = () => {
@@ -30,7 +31,7 @@ const initializePassport = () => {
           email,
           cart: cart._id,
           password: createHash(password),
-          role
+          role,
         };
 
         let result = await userServices.createUser(newUser);
@@ -58,7 +59,7 @@ const initializePassport = () => {
       try {
         const user = await userServices.getUserByEmail(username);
         if (!user) {
-          console.log("El usuario no existe");
+          logger.error(`El usuario con el mail ${username} no existe`);
           return done(null, false);
         }
 

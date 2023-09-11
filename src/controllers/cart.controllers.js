@@ -1,12 +1,14 @@
 import * as cartServices from "../services/cart.services.js";
 import * as productServices from "../services/product.services.js";
+import { logger } from "../utils/logger.js";
 
 const getAllCarts = async (req, res) => {
   try {
     const carts = await cartServices.getAllCarts();
     res.status(200).json(carts);
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -19,7 +21,8 @@ const getCartById = async (req, res) => {
 
     res.status(200).json(cart);
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -28,7 +31,8 @@ const addCart = async (req, res) => {
     const carts = await cartServices.addCart();
     res.status(200).json(carts);
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -46,7 +50,8 @@ const addProductToCart = async (req, res) => {
 
     res.status(200).json({ msg: "Producto agregado al carrito", products: response.products });
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -61,7 +66,8 @@ const addProductInUserCart = async (req, res) => {
 
     res.status(200).json({ msg: "Producto agregado al carrito", products: response.products });
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -76,7 +82,8 @@ const deleteCart = async (req, res) => {
 
     res.status(200).json({ msg: "Carrito eliminado" });
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -98,7 +105,8 @@ const deleteProductFromCart = async (req, res) => {
 
     res.status(200).json({ msg: "Producto eliminado del carrito" });
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -113,7 +121,8 @@ const deleteAllProductsFromCart = async (req, res) => {
 
     res.status(200).json({ msg: "Productos eliminados del carrito" });
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -125,7 +134,8 @@ const updateProductsFromCart = async (req, res) => {
     const response = await cartServices.updateCart(cid, products);
     res.status(200).json({ msg: "Carrito actualizado", response });
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -148,7 +158,8 @@ const updateProductQuantityFromCart = async (req, res) => {
 
     res.status(200).json({ msg: `Cantidad de productos actualizada a ${quantity}` });
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
@@ -161,10 +172,11 @@ const purchaseCart = async (req, res) => {
     if (!cart) return res.status(404).json({ msg: "Carrito no encontrado" });
 
     const response = await cartServices.purchaseCart(cid, user);
-    
+
     res.status(200).json({ msg: "Compra realizada", response });
   } catch (error) {
-    console.log(error);
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
   }
 };
 
