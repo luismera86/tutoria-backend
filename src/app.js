@@ -11,7 +11,7 @@ import { initializePassport } from "./config/passport.config.js";
 import { routerCarts } from "./routes/carts.routes.js";
 import { routerProducts } from "./routes/products.routes.js";
 import { routerSessions } from "./routes/sessions.routes.js";
-import { routerViews } from "./routes/views.router.js";
+import { routerViews } from "./routes/views.routes.js";
 import * as messageServices from "./services/message.services.js";
 import * as productServices from "./services/product.services.js";
 import { logger } from "./utils/logger.js";
