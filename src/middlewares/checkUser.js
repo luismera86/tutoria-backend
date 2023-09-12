@@ -1,5 +1,18 @@
+import * as productServices from "../services/product.services.js";
+
 const isAuthorize = (req, res, next) => {
-  if (req.user.role === "admin") {
+  if (req.user.role === "admin" || req.user.role === "premium") {
+    next();
+  } else {
+    res.status(403).send({ error: "No tiene permisos para realizar esta acción" });
+  }
+};
+
+const isOwnerAuthorized = async (req, res, next) => {
+  const { id } = req.params;
+  const product = await productServices.getProductById(id);
+  const user = req.session.user;
+  if (product.owner === user.email || user.role === "admin") {
     next();
   } else {
     res.status(403).send({ error: "No tiene permisos para realizar esta acción" });
@@ -15,11 +28,11 @@ const isLogin = (req, res, next) => {
 };
 
 const isUserAuthorized = (req, res, next) => {
-  if (req.user.role === "user") {
+  if (req.user.role === "user" || req.user.role === "premium") {
     next();
   } else {
     res.status(403).send({ error: "No tiene permisos para realizar esta acción" });
   }
 };
 
-export { isAuthorize, isLogin, isUserAuthorized };
+export { isAuthorize, isLogin, isUserAuthorized, isOwnerAuthorized };

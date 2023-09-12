@@ -41,4 +41,19 @@ const changePassword = async (email, newPassword) => {
   }
 };
 
-export { createUser, getUserByEmail, getUserById, changePassword };
+const changeRole = async (req, res) => {
+  const { uid } = req.params;
+  try {
+    const user = await userServices.getUserById(uid);
+    if (!user) return res.status(404).json({ msg: "Usuario no encontrado" });
+    await userServices.changeRole(user.email);
+    const userUpdated = await userServices.getUserById(uid);
+
+    res.status(200).json({ status: "success", msg: "Rol cambiado con éxito", newRole: userUpdated.role });
+  } catch (error) {
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
+  }
+};
+
+export { createUser, getUserByEmail, getUserById, changePassword, changeRole };

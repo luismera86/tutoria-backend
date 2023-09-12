@@ -16,6 +16,7 @@ import * as messageServices from "./services/message.services.js";
 import * as productServices from "./services/product.services.js";
 import { logger } from "./utils/logger.js";
 import { routerTest } from "./routes/test.routes.js";
+import { routerUsers } from "./routes/users.routes.js";
 
 // Datos de configuración del servidor
 const { PORT, COOKIE_SECRET } = config;
@@ -58,6 +59,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/products", routerProducts);
 app.use("/api/carts", routerCarts);
 app.use("/api/sessions", routerSessions);
+app.use("/api/users", routerUsers);
 app.use("/api/test", routerTest);
 app.use("/", routerViews);
 app.get("*", (req, res) => {

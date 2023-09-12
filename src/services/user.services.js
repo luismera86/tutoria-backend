@@ -19,4 +19,9 @@ const changePassword = async (email, newPassword) => {
   await userDao.changePassword(email, newPassword);
 };
 
-export { createUser, getUserByEmail, getUserById, changePassword };
+const changeRole = async (email) => {
+  const user = await userDao.changeRole(email);
+  return user;
+};
+
+export { createUser, getUserByEmail, getUserById, changePassword, changeRole };

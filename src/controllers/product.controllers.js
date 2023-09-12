@@ -41,6 +41,14 @@ const getProductById = async (req, res) => {
 const addProduct = async (req, res) => {
   const body = req.body;
   try {
+    const user = req.session.user;
+    // Verificamos si el usuario es premium y si lo es, le asignamos el producto
+    if (user.role === "premium") {
+      const newProduct = { ...body, owner: user.email };
+      const resProducts = await productServices.addProduct(newProduct);
+      return res.status(200).json(resProducts);
+    }
+
     const resProducts = await productServices.addProduct(body);
 
     res.status(200).json(resProducts);

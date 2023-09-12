@@ -8,7 +8,7 @@ import {
   getProductById,
   updateProduct,
 } from "../controllers/product.controllers.js";
-import { isAuthorize } from "../middlewares/checkUser.js";
+import { isAuthorize, isOwnerAuthorized } from "../middlewares/checkUser.js";
 
 const routerProducts = Router();
 routerProducts.get("/mockingporducts", generateMockingProducts);
@@ -21,7 +21,7 @@ routerProducts.post("/", isAuthorize, addProduct);
 
 routerProducts.put("/:id", isAuthorize, updateProduct);
 
-routerProducts.delete("/:id", isAuthorize, deleteProduct);
+routerProducts.delete("/:id", isAuthorize, isOwnerAuthorized, deleteProduct);
 
 
 export { routerProducts };

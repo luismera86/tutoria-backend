@@ -46,6 +46,9 @@ const addProductToCart = async (req, res) => {
     const product = await productServices.getProductById(pid);
     if (!product) return res.status(404).json({ msg: "Producto no encontrado" });
 
+    const user = req.session.user;
+    if(user.email === product.owner) return res.status(403).json({ msg: "No puede agregar un producto propio al carrito" });
+
     const response = await cartServices.addProductToCart(cid, pid);
 
     res.status(200).json({ msg: "Producto agregado al carrito", products: response.products });
