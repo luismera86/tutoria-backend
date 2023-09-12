@@ -10,12 +10,16 @@ import {
   realTimeProducts,
   registerUser,
   resetPassword,
+  viewChangePassword,
   viewLogin,
   viewProfile,
   viewRegister,
   viewResetPassword,
+  changePassword
 } from "../controllers/views.controllers.js";
 import { checkToken } from "../middlewares/checkToken.js";
+import { checkResetToken } from "../middlewares/checkResetToken.js";
+
 
 const routerViews = Router();
 
@@ -49,7 +53,11 @@ routerViews.get("/logout", checkToken, logoutUser);
 
 // Vista restaurar contraseña
 routerViews.get("/resetpassword", viewResetPassword);
-
 routerViews.post("/resetpassword", resetPassword);
+
+// Vista cambiar contraseña
+routerViews.get("/changepassword/:token", checkResetToken, viewChangePassword);
+routerViews.post("/changepassword", changePassword);
+
 
 export { routerViews };

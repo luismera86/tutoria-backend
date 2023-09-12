@@ -3,9 +3,10 @@ import * as cartServices from "../services/cart.services.js";
 import * as userServices from "../services/user.services.js";
 import * as ticketService from "../services/ticket.services.js";
 import * as cartService from "../services/cart.services.js";
-import { isValidPassword } from "../utils/hashPassword.js";
+import { createHash, isValidPassword } from "../utils/hashPassword.js";
 import { generateToken, verifyToken } from "../utils/jwt.js";
 import { logger } from "../utils/logger.js";
+import { sendLinkResetPassword } from "../utils/sendLinkPasswordMail.js";
 
 const home = async (req, res) => {
   try {
@@ -193,15 +194,44 @@ const viewResetPassword = async (req, res) => {
 };
 
 const resetPassword = async (req, res) => {
-  const { email, password } = req.body;
+  const { email } = req.body;
   try {
     const user = await userServices.getUserByEmail(email);
+
     if (!user) return res.render("resetPassword", { error: `El usuario con el mail ${email} no existe` });
 
-    // Actualizamos la contraseña
-    await userServices.changePassword(email, createHash(password));
+    // Generamos un token que expira en 1hs
+    const token = generateToken({ email }, "1h");
 
-    res.redirect("/login");
+    // Enviamos el mail con el link para resetear la contraseña
+    sendLinkResetPassword(token, email);
+
+    res.render("sendMailConfirm", { email });
+  } catch (error) {
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
+  }
+};
+
+const viewChangePassword = async (req, res) => {
+  try {
+    res.render("changePassword");
+  } catch (error) {
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
+  }
+};
+
+const changePassword = async (req, res) => {
+  const { password1, password2 } = req.body;
+  try {
+    if (password1 !== password2) return res.render("changePassword", { error: "Las contraseñas no coinciden" });
+
+    const email = req.cookies.token.user.email;
+    const user = await userServices.getUserByEmail(email);
+    if (!user) return res.render("changePassword", { error: `El usuario con el mail ${email} no existe` });
+    await user.updateOne({ password: createHash(password1) });
+    res.render("changePasswordConfirm", { msg: "Contraseña cambiada con éxito" });
   } catch (error) {
     logger.error(error.message);
     res.status(500).json({ error: "Server internal error" });
@@ -254,4 +284,6 @@ export {
   resetPassword,
   generateTicket,
   getTicketFromEmail,
+  changePassword,
+  viewChangePassword,
 };
