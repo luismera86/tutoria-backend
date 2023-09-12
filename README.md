@@ -1,4 +1,2 @@
-## Desafio 12 - Tercera pre entgrega del proyecto final
-![Imgur](https://imgur.com/LOZs2Fk.png)
-![Imgur](https://imgur.com/dGH9huv.png)
-![Imgur](https://imgur.com/bVWcFpQ.png)
+## Desafio 14 - Implementación de logger
+![Imgur](https://imgur.com/dsO8tgj.png)
