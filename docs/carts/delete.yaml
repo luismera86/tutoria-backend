@@ -1,0 +1,37 @@
+paths:
+  /api/carts/{pid}:
+    delete:
+      summary: Eliminar un cart por id
+      tags:
+        - Carts
+      parameters:
+        - in: path
+          name: pid
+          schema:
+            type: string
+          required: true
+          description: Id del carto
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/cart'
+components:
+  schemas:
+    cart:
+      type: object
+      properties:
+        _id:
+          type: ObjetId
+          description: Id auto generado por MongoDB
+        products:
+          type: array
+          description: Productos del carrito
+        total:
+          type: number
+          description: Total del carrito
+          

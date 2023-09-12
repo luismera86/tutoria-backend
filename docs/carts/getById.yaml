@@ -1,0 +1,42 @@
+paths:
+  /api/carts/{pid}:
+    get:
+      summary: Obtener un carto por id
+      tags:
+        - Carts
+      parameters:
+        - in: path
+          name: pid
+          schema:
+            type: string
+          required: true
+          description: Id del carto
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/cart'
+components:
+  schemas:
+    cart:
+      type: object
+      properties:
+        _id:
+          type: ObjetId
+          description: Id auto generado por MongoDB
+        products:
+          type: array
+          description: Productos del carrito
+        total:
+          type: number
+          description: Total del carrito
+        example:
+          _id: 60b9b0b3a9c9a3b4b8e3b2a1
+          products: []
+          total: 0
+
+          
