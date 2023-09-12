@@ -17,6 +17,7 @@ import * as productServices from "./services/product.services.js";
 import { logger } from "./utils/logger.js";
 import { routerTest } from "./routes/test.routes.js";
 import { routerUsers } from "./routes/users.routes.js";
+import { __dirname } from "./utils/utils.js";
 
 // Datos de configuración del servidor
 const { PORT, COOKIE_SECRET } = config;
@@ -54,7 +55,24 @@ app.use(passport.session());
 
 app.use(express.urlencoded({ extended: true }));
 
-// Iniciamos las rutas importadas, las de products y carts para poder utilizar los endpoints
+// Configuramos la documentación de la API
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUiExpress from "swagger-ui-express";
+
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.1",
+    info: {
+      title: "Documentación de la API",
+      description: "Documentación de la API de la aplicación de gestión de productos y carritos de compra",
+    },
+  },
+  apis: ["./docs/**/*.yaml"],
+};
+
+const specs = swaggerJSDoc(swaggerOptions);
+
+app.use("/docs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 
 app.use("/api/products", routerProducts);
 app.use("/api/carts", routerCarts);

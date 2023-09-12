@@ -1,0 +1,106 @@
+paths:
+  /api/products/{pid}:
+    put:
+      summary: Actualizar un producto
+      tags:
+        - Products
+      parameters:
+        - in: path
+          name: pid
+          schema:
+            type: string
+          required: true
+          description: Id del producto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/requestBodies/updateProduct"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: ObjetId
+          description: Id auto generado por MongoDB
+        title:
+          type: string
+          description: Nombre del producto
+        price:
+          type: number
+          description: Precio del producto
+        thumbnail:
+          type: string
+          description: URL de la imagen del producto
+        status:
+          type: boolean
+          description: Estado del producto
+        stock:
+          type: number
+          description: Cantidad de productos en stock
+        code:
+          type: number
+          description: Código único del producto
+        category:
+          type: string
+          description: Categoría del producto
+        owner:
+          type: string
+          description: Dueño del producto agregado
+      example:
+        _id: 60b0a1a9e6c9a3b4b8c9b0a1
+        title: "Producto 1"
+        price: 100
+        thumbnail: "https://cdn3.iconfinder.com/data/icons/education-209/64/bus-vehicle-transport-school-128.png"
+        status: true
+        stock: 10
+        code: 1
+        category: "Autos"
+        owner: "juan@gmail.com"
+  requestBodies:
+    updateProduct:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Nombre del producto
+        price:
+          type: number
+          description: Precio del producto
+        thumbnail:
+          type: string
+          description: URL de la imagen del producto
+        status:
+          type: boolean
+          description: Estado del producto
+        stock:
+          ype: number
+          description: Cantidad de productos en stock
+        code:
+          type: number
+          description: Código único del producto
+        category:
+          type: string
+          description: Categoría del producto
+        owner:
+          type: string
+          description: Dueño del producto agregado
+      example:
+        title: "Producto 1"
+        price: 100
+        thumbnail: "https://cdn3.iconfinder.com/data/icons/education-209/64/bus-vehicle-transport-school-128.png"
+        status: true
+        stock: 10
+        code: 1
+        category: "Autos"

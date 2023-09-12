@@ -1,4 +1,5 @@
 import { Router } from "express";
+import swaggerUiExpress from "swagger-ui-express";
 import {
   cartDetail,
   chat,
@@ -15,11 +16,11 @@ import {
   viewProfile,
   viewRegister,
   viewResetPassword,
-  changePassword
+  changePassword,
 } from "../controllers/views.controllers.js";
 import { checkToken } from "../middlewares/checkToken.js";
 import { checkResetToken } from "../middlewares/checkResetToken.js";
-
+import { specs } from "../config/swagger.config.js";
 
 const routerViews = Router();
 
@@ -59,5 +60,7 @@ routerViews.post("/resetpassword", resetPassword);
 routerViews.get("/changepassword/:token", checkResetToken, viewChangePassword);
 routerViews.post("/changepassword", changePassword);
 
+// Documentación de la API
+// routerViews.get("/docs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 
 export { routerViews };
