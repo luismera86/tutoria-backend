@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "nodemon ./src/app.js",
     "test": "mocha",
-    "test:watch": "mocha --watch-ignore \"./src/**/*.spec.js\" --watch-extensions js,mjs,json --recursive"
+    "test:watch": "mocha --watch"
   },
   "keywords": [],
   "author": "",
