@@ -1,5 +1,10 @@
 import * as userDao from "../dao/mongo/user.dao.js";
 
+const getAllUsers = async () => { 
+  const users = await userDao.getAllUsers();
+  return users;
+}
+
 const createUser = async (user) => {
   const newUser = await userDao.createUser(user);
   return newUser;
@@ -24,4 +29,9 @@ const changeRole = async (email) => {
   return user;
 };
 
-export { createUser, getUserByEmail, getUserById, changePassword, changeRole };
+const deleteUser = async (id) => {
+  await userDao.deleteUser(id);
+
+};
+
+export { createUser, getUserByEmail, getUserById, changePassword, changeRole, getAllUsers, deleteUser };

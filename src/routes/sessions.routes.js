@@ -8,7 +8,7 @@ const routerSessions = Router();
 routerSessions.post("/login", passport.authenticate("login", { failureRedirect: "faillogin" }), login);
 
 routerSessions.get("/faillogin", (req, res) => {
-  res.send({ error: "Error credenciales inválidas" });
+  res.status(401).send({ error: "Error credenciales inválidas" });
 });
 
 routerSessions.post("/logout", logout);
@@ -17,7 +17,7 @@ routerSessions.post(
   "/register",
   passport.authenticate("register", { failureRedirect: "failregister" }),
   async (req, res) => {
-    res.send({ status: "success", message: "Usuario registrado" });
+    res.send({ status: "success", message: "Usuario registrado", user: req.user });
   }
 );
 

@@ -1,5 +1,10 @@
 import { userModel } from "../models/user.model.js";
 
+const getAllUsers = async () => {
+  const users = await userModel.find({});
+  return users;
+};
+
 const createUser = async (user) => {
   const newUser = await userModel.create(user);
   return newUser;
@@ -23,13 +28,17 @@ const changeRole = async (email) => {
   const user = await userModel.findOne({ email: email });
   if (user.role === "user") {
     const resp = await userModel.findOneAndUpdate({ email: email }, { role: "premium" });
-    
+
     return resp;
   }
   if (user.role === "premium") {
     const resp = await userModel.findOneAndUpdate({ email: email }, { role: "user" });
     return resp;
-  }  
+  }
 };
 
-export { createUser, getUserByEmail, getUserById, changePassword, changeRole };
+const deleteUser = async (id) => {
+  await userModel.findByIdAndDelete(id);
+};
+
+export { createUser, getUserByEmail, getUserById, changePassword, changeRole, getAllUsers, deleteUser };

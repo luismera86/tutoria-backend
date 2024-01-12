@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon ./src/app.js",
-    "test": "mocha --watch --recursive --exit"
+    "test": "mocha",
+    "test:watch": "mocha --watch-ignore \"./src/**/*.spec.js\" --watch-extensions js,mjs,json --recursive"
   },
   "keywords": [],
   "author": "",
@@ -33,6 +34,8 @@
   },
   "devDependencies": {
     "chai": "^5.0.0",
-    "mocha": "^10.2.0"
+    "mocha": "^10.2.0",
+    "nodemon": "^3.0.2",
+    "supertest": "^6.3.3"
   }
 }

@@ -1,40 +1,47 @@
 import * as userServices from "../services/user.services.js";
 import { logger } from "../utils/logger.js";
 
-const createUser = async (user) => {
+const getAllUsers = async (req, res) => {
   try {
-    const newUser = await userServices.createUser(user);
-    return newUser;
+    const users = await userServices.getAllUsers();
+    res.status(200).json(users);
   } catch (error) {
     logger.error(error.message);
     res.status(500).json({ error: "Server internal error" });
   }
 };
 
-const getUserByEmail = async (email) => {
+const getUserById = async (req, res) => {
+  const { uid } = req.params;
+  try {
+    const user = await userServices.getUserById(uid);
+    if (!user) return res.status(400).json({ msg: "User not found" });
+    res.status(200).json(user);
+  } catch (error) {
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
+  }
+};
+
+const getUserByEmail = async (req, res) => {
+  const { email } = req.params;
   try {
     const user = await userServices.getUserByEmail(email);
-    return user;
+    if (!user) return res.status(400).json({ msg: "User not found" });
+    res.status(200).json(user);
   } catch (error) {
     logger.error(error.message);
     res.status(500).json({ error: "Server internal error" });
   }
 };
 
-const getUserById = async (id) => {
+const deleteUser = async (req, res) => {
+  const { uid } = req.params;
   try {
-    const user = await userServices.getUserById(id);
-    return user;
-  } catch (error) {
-    logger.error(error.message);
-    res.status(500).json({ error: "Server internal error" });
-  }
-};
-
-const changePassword = async (email, newPassword) => {
-  try {
-    await userServices.changePassword(email, newPassword);
-    return "Contraseña cambiada con éxito";
+    const user = await userServices.getUserById(uid);
+    if (!user) return res.status(404).json({ msg: "Usuario no encontrado" });
+    await userServices.deleteUser(uid);
+    res.status(200).json({ status: "success", msg: "Usuario borrado con éxito" });
   } catch (error) {
     logger.error(error.message);
     res.status(500).json({ error: "Server internal error" });
@@ -56,4 +63,4 @@ const changeRole = async (req, res) => {
   }
 };
 
-export { createUser, getUserByEmail, getUserById, changePassword, changeRole };
+export { changeRole, getAllUsers, getUserById, deleteUser, getUserByEmail };
