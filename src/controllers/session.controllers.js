@@ -3,6 +3,7 @@ import { logger } from "../utils/logger.js";
 import * as userServices from "../services/user.services.js";
 const login = async (req, res) => {
   try {
+    console.log(req.user);
     if (!req.user) return res.status(400).send({ status: "error", message: "Error credenciales inválidas" });
 
     req.session.user = userDTO(req.user);

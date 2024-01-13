@@ -7,6 +7,7 @@ import { createHash, isValidPassword } from "../utils/hashPassword.js";
 import { generateToken, verifyToken } from "../utils/jwt.js";
 import { logger } from "../utils/logger.js";
 import { sendLinkResetPassword } from "../utils/sendLinkPasswordMail.js";
+import { userDTO } from "../dto/user.dto.js";
 
 const home = async (req, res) => {
   try {

@@ -39,6 +39,7 @@ mongoDBConnection();
 app.use(express.static("public"));
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser(COOKIE_SECRET));
 
@@ -48,7 +49,6 @@ initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(express.urlencoded({ extended: true }));
 
 // Configuramos la documentación de la API
 import swaggerJSDoc from "swagger-jsdoc";
