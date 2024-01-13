@@ -34,4 +34,14 @@ const deleteUser = async (id) => {
 
 };
 
-export { createUser, getUserByEmail, getUserById, changePassword, changeRole, getAllUsers, deleteUser };
+const addLastConnection = async (uid, date) => {
+  const user = await userDao.addLastConnection(uid, date);
+  return user;
+};
+
+const addFiles = async (uid, files) => {
+  const user = await userDao.addFiles(uid, files);
+  return user;
+};
+
+export { createUser, getUserByEmail, getUserById, changePassword, changeRole, getAllUsers, deleteUser, addLastConnection, addFiles };

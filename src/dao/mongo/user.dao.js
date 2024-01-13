@@ -41,4 +41,20 @@ const deleteUser = async (id) => {
   await userModel.findByIdAndDelete(id);
 };
 
-export { createUser, getUserByEmail, getUserById, changePassword, changeRole, getAllUsers, deleteUser };
+const addLastConnection = async (uid, date) => {
+  const user = await userModel.findById(uid);
+  user.last_connection = date;
+  await user.save();
+
+  return user;
+};
+
+const addFiles = async (uid, files) => {
+  const user = await userModel.findById(uid);
+  user.documents = files;
+  await user.save();
+
+  return user;
+ };
+
+export { createUser, getUserByEmail, getUserById, changePassword, changeRole, getAllUsers, deleteUser, addLastConnection, addFiles };

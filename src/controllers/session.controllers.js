@@ -1,10 +1,14 @@
 import { userDTO } from "../dto/user.dto.js";
 import { logger } from "../utils/logger.js";
+import * as userServices from "../services/user.services.js";
 const login = async (req, res) => {
   try {
     if (!req.user) return res.status(400).send({ status: "error", message: "Error credenciales inválidas" });
 
     req.session.user = userDTO(req.user);
+    
+
+    await userServices.addLastConnection(req.user._id, new Date());
 
     res.send({ status: "success", payload: req.session.user });
   } catch (error) {
@@ -15,6 +19,8 @@ const login = async (req, res) => {
 
 const logout = async (req, res) => {
   try {
+
+    await userServices.addLastConnection(req.session.user._id, new Date());
     // Destruimos la sesión
     req.session.destroy((err) => {
       if (err) {

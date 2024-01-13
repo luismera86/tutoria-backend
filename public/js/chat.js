@@ -15,7 +15,7 @@ chatForm.addEventListener("submit", (e) => {
 });
 
 socket.on("messages", (data) => {
-  console.log(data.length);
+
   if(data.length > 0){
     chatMessages.innerHTML = "";
     data.forEach((message) => {

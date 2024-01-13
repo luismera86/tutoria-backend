@@ -63,4 +63,19 @@ const changeRole = async (req, res) => {
   }
 };
 
+const addFiles = async (req, res) => {
+  const { uid } = req.params;
+  try {
+    const user = await userServices.getUserById(uid);
+    if (!user) return res.status(404).json({ msg: "Usuario no encontrado" });
+
+    await userServices.addFiles(uid, req.files);
+    const userUpdated = await userServices.getUserById(uid);
+    res.status(200).json({ status: "success", msg: "Archivos subidos con éxito", user: userUpdated });
+  } catch (error) {
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
+  }
+};
+
 export { changeRole, getAllUsers, getUserById, deleteUser, getUserByEmail };
