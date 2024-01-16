@@ -158,11 +158,12 @@ const registerUser = async (req, res) => {
 const viewProfile = async (req, res) => {
   try {
     const { user } = verifyToken(req.cookies.token);
+    const products = await productServices.getAllProducts(req.query);
 
     // Si no hay usuario logueado redireccionamos al login
     if (!user) return res.redirect("/login");
 
-    res.render("profile", { user });
+    res.render("profile", { user, products: products.docs });
   } catch (error) {
     logger.error(error.message);
     res.status(500).json({ error: "Server internal error" });
