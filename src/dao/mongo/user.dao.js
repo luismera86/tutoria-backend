@@ -51,10 +51,28 @@ const addLastConnection = async (uid, date) => {
 
 const addFiles = async (uid, files) => {
   const user = await userModel.findById(uid);
-  user.documents = files;
+  files.forEach((file) => {
+    let newDocument = {
+      name: file.originalname,
+      reference: file.path,
+    };
+
+    user.documents.push(newDocument);
+  });
+
   await user.save();
 
   return user;
- };
+};
 
-export { createUser, getUserByEmail, getUserById, changePassword, changeRole, getAllUsers, deleteUser, addLastConnection, addFiles };
+export {
+  createUser,
+  getUserByEmail,
+  getUserById,
+  changePassword,
+  changeRole,
+  getAllUsers,
+  deleteUser,
+  addLastConnection,
+  addFiles,
+};
