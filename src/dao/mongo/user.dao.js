@@ -65,6 +65,18 @@ const addFiles = async (uid, files) => {
   return user;
 };
 
+const deleteUsers = async () => { 
+  const users = await userModel.find({});
+
+  users.forEach((user) => {
+    if (user.last_connection < new Date(Date.now() - 172800000)) {
+      userModel.findByIdAndDelete(user._id);
+    }
+  });
+
+  return users;
+};
+
 export {
   createUser,
   getUserByEmail,
@@ -75,4 +87,5 @@ export {
   deleteUser,
   addLastConnection,
   addFiles,
+  deleteUsers,
 };

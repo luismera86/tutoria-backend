@@ -1,9 +1,9 @@
 import * as userDao from "../dao/mongo/user.dao.js";
 
-const getAllUsers = async () => { 
+const getAllUsers = async () => {
   const users = await userDao.getAllUsers();
   return users;
-}
+};
 
 const createUser = async (user) => {
   const newUser = await userDao.createUser(user);
@@ -31,7 +31,6 @@ const changeRole = async (email) => {
 
 const deleteUser = async (id) => {
   await userDao.deleteUser(id);
-
 };
 
 const addLastConnection = async (uid, date) => {
@@ -44,4 +43,19 @@ const addFiles = async (uid, files) => {
   return user;
 };
 
-export { createUser, getUserByEmail, getUserById, changePassword, changeRole, getAllUsers, deleteUser, addLastConnection, addFiles };
+const deleteUsers = async () => {
+  await userDao.deleteUsers();
+};
+
+export {
+  createUser,
+  getUserByEmail,
+  getUserById,
+  changePassword,
+  changeRole,
+  getAllUsers,
+  deleteUser,
+  addLastConnection,
+  addFiles,
+  deleteUsers,
+};

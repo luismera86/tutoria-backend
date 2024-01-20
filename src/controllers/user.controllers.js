@@ -69,7 +69,7 @@ const addFiles = async (req, res) => {
     const user = await userServices.getUserById(uid, req.files);
     if (!user) return res.status(404).json({ msg: "Usuario no encontrado" });
     const files = Object.values(req.files).flat();
-   
+
     await userServices.addFiles(uid, files);
     const userUpdated = await userServices.getUserById(uid);
     res.status(200).json({ status: "success", msg: "Archivos subidos con éxito", user: userUpdated });
@@ -79,4 +79,14 @@ const addFiles = async (req, res) => {
   }
 };
 
-export { changeRole, getAllUsers, getUserById, deleteUser, getUserByEmail, addFiles };
+const deleteUsers = async (req, res) => {
+  try {
+    await userServices.deleteUsers();
+    res.status(200).json({ status: "success", msg: "Usuarios borrados con éxito" });
+  } catch (error) {
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
+  }
+};
+
+export { changeRole, getAllUsers, getUserById, deleteUser, getUserByEmail, addFiles, deleteUsers };
