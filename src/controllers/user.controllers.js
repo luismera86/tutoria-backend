@@ -66,10 +66,11 @@ const changeRole = async (req, res) => {
 const addFiles = async (req, res) => {
   const { uid } = req.params;
   try {
-    const user = await userServices.getUserById(uid);
+    const user = await userServices.getUserById(uid, req.files);
     if (!user) return res.status(404).json({ msg: "Usuario no encontrado" });
-
-    await userServices.addFiles(uid, req.files);
+    const files = Object.values(req.files).flat();
+   
+    await userServices.addFiles(uid, files);
     const userUpdated = await userServices.getUserById(uid);
     res.status(200).json({ status: "success", msg: "Archivos subidos con éxito", user: userUpdated });
   } catch (error) {
@@ -78,4 +79,4 @@ const addFiles = async (req, res) => {
   }
 };
 
-export { changeRole, getAllUsers, getUserById, deleteUser, getUserByEmail };
+export { changeRole, getAllUsers, getUserById, deleteUser, getUserByEmail, addFiles };
