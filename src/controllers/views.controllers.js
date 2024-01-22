@@ -1,5 +1,4 @@
 import * as productServices from "../services/product.services.js";
-import * as cartServices from "../services/cart.services.js";
 import * as userServices from "../services/user.services.js";
 import * as ticketService from "../services/ticket.services.js";
 import * as cartService from "../services/cart.services.js";
@@ -269,6 +268,38 @@ const getTicketFromEmail = async (req, res) => {
   }
 };
 
+// Cart 
+const addProductToCart = async (req, res) => {
+  try {
+    const { user } = verifyToken(req.cookies.token);
+    const cart = await cartService.getCartById(user.cart);
+    const product = await productServices.getProductById(req.params.pid);
+    await cartService.addProductToCart(cart, product);
+    const newCart = await cartService.getCartById(user.cart);
+    res.status(200).render("cart", { total: newCart.total, products: newCart.products, cartId: newCart._id });
+  } catch (error) {
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
+  }
+
+}
+
+const buyCart = async (req, res) => {
+  try {
+    const { user } = verifyToken(req.cookies.token);
+    const cart = await cartService.getCartById(user.cart);
+    //TODO modificar la generacion de ticket para que sea con el carrito y su id
+    const ticket = await ticketService.generateTicket(cart);
+    await cartService.removeAllProductsFromCart(cart);
+    console.log(ticket);
+    res.status(200).render("ticket", { ticket });
+  } catch (error) {
+    logger.error(error.message);
+    res.status(500).json({ error: "Server internal error" });
+  }
+
+}
+
 export {
   home,
   realTimeProducts,
@@ -288,4 +319,6 @@ export {
   getTicketFromEmail,
   changePassword,
   viewChangePassword,
+  addProductToCart,
+  buyCart
 };
