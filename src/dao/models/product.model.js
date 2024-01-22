@@ -18,6 +18,7 @@ const productSchema = new Schema({
 
 productSchema.plugin(mongoosePaginate);
 
+
 const productModel = model("product", productSchema);
 
 export { productModel };

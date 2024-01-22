@@ -1,7 +1,7 @@
 import { Router } from "express";
-import swaggerUiExpress from "swagger-ui-express";
 import {
   cartDetail,
+  changePassword,
   chat,
   home,
   loginUser,
@@ -16,11 +16,11 @@ import {
   viewProfile,
   viewRegister,
   viewResetPassword,
-  changePassword,
+  addProductToCart,
+  buyCart
 } from "../controllers/views.controllers.js";
-import { checkToken } from "../middlewares/checkToken.js";
 import { checkResetToken } from "../middlewares/checkResetToken.js";
-import { specs } from "../config/swagger.config.js";
+import { checkToken } from "../middlewares/checkToken.js";
 
 const routerViews = Router();
 
@@ -35,6 +35,13 @@ routerViews.get("/products", checkToken, products);
 routerViews.get("/product/:pid", checkToken, productDetail);
 
 routerViews.get("/cart/:cid", checkToken, cartDetail);
+
+
+// TODO: Agregar la ruta para añadir productos al carrito
+routerViews.post("/cart/:pid", checkToken, addProductToCart);
+// TODO: Agregar la ruta para la compra de productos
+routerViews.post("/cart/buy/:cid", checkToken, buyCart);
+
 
 // Vista de login
 routerViews.get("/login", viewLogin);
@@ -64,3 +71,4 @@ routerViews.post("/changepassword", changePassword);
 // routerViews.get("/docs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 
 export { routerViews };
+
