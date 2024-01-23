@@ -67,12 +67,12 @@ const addFiles = async (uid, files) => {
 
 const deleteUsers = async () => { 
   const users = await userModel.find({});
-
-  users.forEach((user) => {
+  // Eliminamos los usuarios que llevan más de 2 días sin conectarse
+  for (const user of users) {
     if (user.last_connection < new Date(Date.now() - 172800000)) {
-      userModel.findByIdAndDelete(user._id);
+      await userModel.findByIdAndDelete(user._id);
     }
-  });
+  }
 
   return users;
 };

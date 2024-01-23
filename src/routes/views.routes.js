@@ -36,10 +36,8 @@ routerViews.get("/product/:pid", checkToken, productDetail);
 
 routerViews.get("/cart/:cid", checkToken, cartDetail);
 
-
-// TODO: Agregar la ruta para añadir productos al carrito
+// Agregamos un producto al carrito
 routerViews.post("/cart/:pid", checkToken, addProductToCart);
-// TODO: Agregar la ruta para la compra de productos
 routerViews.post("/cart/buy/:cid", checkToken, buyCart);
 
 

@@ -96,6 +96,7 @@ const loginUser = async (req, res) => {
   try {
     // Verificamos los datos ingresados
     const user = await userServices.getUserByEmail(email);
+    console.log(user);
 
     if (!user || !isValidPassword(user, password))
       return res.render("login", { error: "Usuario o contraseña incorrectos" });
@@ -137,14 +138,19 @@ const registerUser = async (req, res) => {
       return res.render("register", { error: "Debe ingresar todos los datos" });
     }
 
-    // Creamos el usuario
-    await userServices.createUser({
-      first_name,
-      last_name,
-      email,
-      age,
-      password: createHash(password),
-    });
+    const cart = await cartService.addCart();
+        const newUser = {
+          first_name,
+          last_name,
+          age,
+          email,
+          cart: cart._id,
+          password: createHash(password),
+          role,
+          last_connection: new Date(),
+    };
+    
+     await userServices.createUser(newUser);
 
     // Devolvemos el usuario creado
     return res.redirect("/login");
@@ -272,10 +278,13 @@ const getTicketFromEmail = async (req, res) => {
 const addProductToCart = async (req, res) => {
   try {
     const { user } = verifyToken(req.cookies.token);
+    console.log(user);
     const cart = await cartService.getCartById(user.cart);
+    console.log(user.cart);
     const product = await productServices.getProductById(req.params.pid);
-    await cartService.addProductToCart(cart, product);
+    await cartService.addProductToCart(cart._id, req.params.pid);
     const newCart = await cartService.getCartById(user.cart);
+    console.log(newCart);
     res.status(200).render("cart", { total: newCart.total, products: newCart.products, cartId: newCart._id });
   } catch (error) {
     logger.error(error.message);
