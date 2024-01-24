@@ -1,0 +1,10 @@
+{{> navBar}}
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Ticket de compra</h5>
+        <p class="card-text">Gracias por su compra</p>
+        <p class="card-text">Total: ${{ticket.amount}}</p>
+        <p class="card-text">Fecha: {{ticket.purchase_datetime}}</p>
+        <p class="card-text">Email de cliente: {{ticket.purchaser}}</p>
+        <p class="card-text">Numero de ticket: {{ticket.code}}</p>
+    </div>

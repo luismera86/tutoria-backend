@@ -1,7 +1,7 @@
 import { Router } from "express";
-import swaggerUiExpress from "swagger-ui-express";
 import {
   cartDetail,
+  changePassword,
   chat,
   home,
   loginUser,
@@ -16,11 +16,13 @@ import {
   viewProfile,
   viewRegister,
   viewResetPassword,
-  changePassword,
+  addProductToCart,
+  buyCart,
+  adminUsers
 } from "../controllers/views.controllers.js";
-import { checkToken } from "../middlewares/checkToken.js";
 import { checkResetToken } from "../middlewares/checkResetToken.js";
-import { specs } from "../config/swagger.config.js";
+import { checkToken } from "../middlewares/checkToken.js";
+import { isAdmin } from "../middlewares/checkUser.js";
 
 const routerViews = Router();
 
@@ -36,8 +38,12 @@ routerViews.get("/product/:pid", checkToken, productDetail);
 
 routerViews.get("/cart/:cid", checkToken, cartDetail);
 
-// TODO: Agregar la ruta para añadir productos al carrito
-// TODO: Agregar la ruta para la compra de productos
+routerViews.get("/cart", checkToken, cartDetail);
+
+
+// Agregamos un producto al carrito
+routerViews.post("/cart/:pid", checkToken, addProductToCart);
+routerViews.post("/cart/buy/:cid", checkToken, buyCart);
 
 
 // Vista de login
@@ -64,7 +70,10 @@ routerViews.post("/resetpassword", resetPassword);
 routerViews.get("/changepassword/:token", checkResetToken, viewChangePassword);
 routerViews.post("/changepassword", changePassword);
 
+// Vista de administrador
+routerViews.get("/adminusers", checkToken, isAdmin, adminUsers);
 // Documentación de la API
 // routerViews.get("/docs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 
 export { routerViews };
+

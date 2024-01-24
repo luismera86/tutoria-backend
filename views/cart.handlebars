@@ -1,3 +1,5 @@
+
+{{> navBar}}
 <h3>Carrito</h3>
 
 
@@ -21,3 +23,17 @@
         </tr>
         {{/each}}
     </tbody>
+
+    <tfoot>
+        <tr>
+            <td>Total</td>
+            <td>{{total}}</td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <form action="/cart/buy/{{cartId}}" method="post">
+                    <input type="submit" value="Finalizar Compra">
+                </form>
+            </td>
+        </tr>
+    </tfoot>

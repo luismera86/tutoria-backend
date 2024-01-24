@@ -1,35 +1,34 @@
 
-{{!-- Listamos los usuarios para poder eliminar y modificar su rol --}}
+{{!-- Listamos todos los usuarios para poder eliminarlos vemos con roles --}}
 
-{{#each users}}
-    <tr>
-        <td>{{this.name}}</td>
-        <td>{{this.email}}</td>
-        <td>{{this.role}}</td>
-        <td>
-            <form action="/admin/users/{{this._id}}?_method=DELETE" method="POST">
+<div>
+    <h1>Usuarios</h1>
+    <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Nombre</th>
+            <th scope="col">Apellido</th>
+            <th scope="col">Email</th>
+            <th scope="col">Rol</th>
+            <th scope="col">Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each users}}
+        <tr>
+            <td>{{this.first_name}}</td>
+            <td>{{this.last_name}}</td>
+            <td>{{this.email}}</td>
+            <td>{{this.role}}</td>
+            <td>
+
+            {{!-- Eliminamos con un método delete --}}
+            <form action="/api/users/{{this.id}}" method="DELETE">
+                <input type="hidden" name="_method" value="DELETE">
                 <button type="submit" class="btn btn-danger">Eliminar</button>
-            </form>
-        </td>
-        <td>
-            <form action="/admin/users/{{this._id}}?_method=PUT" method="POST">
-                <select name="role" id="role">
-                    <option value="user">Usuario</option>
-                    <option value="admin">Administrador</option>
-                </select>
-                <button type="submit" class="btn btn-primary">Cambiar rol</button>
-            </form>
-        </td>
-    </tr>
-{{/each}}
-
-{{/if}}
-
-{{!-- Si no hay usuarios, mostramos un mensaje --}}
-
-{{else}}
-    <h1>No hay usuarios</h1>
-{{/if}}
-
-{{!-- Botón para volver a la página anterior --}}
-<a href="/admin" class="btn btn-primary">Volver</a>
+            </td>
+        </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</div>
