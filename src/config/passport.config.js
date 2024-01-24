@@ -12,7 +12,7 @@ const initializePassport = () => {
     "register",
 
     new LocalStrategy({ passReqToCallback: true, usernameField: "email" }, async (req, username, password, done) => {
-      console.log("register");
+     
       const { first_name, last_name, age, email, role } = req.body;
 
       try {

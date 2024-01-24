@@ -2,6 +2,7 @@ import * as productServices from "../services/product.services.js";
 import { EErrors, customError } from "../utils/customErro.js";
 import { generateProducts } from "../utils/generateProducts.js";
 import { logger } from "../utils/logger.js";
+import { sendOwnerMail } from "../utils/sendOwnerMail.js";
 
 const getAllProducts = async (req, res) => {
   try {
@@ -79,7 +80,16 @@ const updateProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
   const { id } = req.params;
   try {
+  
+    const product = await productServices.getProductById(id);
+    if (!product) return res.status(404).json({ error: "Producto no encontrado" });
+    if (product.owner !== req.session.user.email) {
+      // Si el usuario no es el dueño del producto, se le envía un mail al owner del producto
+      // y se le notifica que alguien eliminó su producto
+      sendOwnerMail(product.owner);
+    }
     await productServices.deleteProduct(id);
+    
     res.status(200).json({ msg: "Producto eliminado" });
   } catch (error) {
     logger.error(error.message);
@@ -104,5 +114,7 @@ const generateMockingProducts = async (req, res) => {
     res.status(500).json({ msg: "Error en el servidor" });
   }
 };
+
+
 
 export { addProduct, deleteProduct, generateMockingProducts, getAllProducts, getProductById, updateProduct };
